@@ -3,13 +3,41 @@
 
 ## Dasar Teori
 
-yang panjang dikit
+C++ bahasa pemrograman yang dikembangkan oleh Bjarne Stroustrup merupakan pengembangan dari bahasa C. Bahasa C++ banyak digunakan karena bahasa ini cukup efisien dan fleksibel, juga mendukung pemrograman yang berorientasi objek. Setiap program yang menggunakan C++ biasanya memiliki fungsi utama yaitu main() yang menjadi landasan program, dan kemudian diawali dengan perintah #include <iostream> untuk mengaktifkan fasilitas input-output. C++ juga memiliki variabel untuk menyimpan data seperti int, float, string, serta bool untuk nilai logika.  
 
 ## Guided
 
 ### soal 1
 
-aku mengerjakan perulangan
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Mahasiswa {
+    string nama;
+    string nim;
+    float ipk;
+};
+
+int main() {
+
+    Mahasiswa mhs1;
+
+    cout << "Masukkan Nama Mahasiswa: ";
+    getline(cin, mhs1.nama);
+    cout << "Masukkan NIM Mahasiswa : ";
+    cin >> mhs1.nim;
+    cout << "Masukkan IPK Mahasiswa : ";
+    cin >> mhs1.ipk;
+
+    cout << "\n=== Data Mahasiswa ===" << endl;
+    cout << "Nama : " << mhs1.nama << endl;
+    cout << "NIM  : " << mhs1.nim << endl;
+    cout << "IPK  : " << mhs1.ipk << endl;
+
+    return 0;
+}
+
 
 ## Unguided
 
