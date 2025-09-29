@@ -299,12 +299,7 @@ int main() {
 ### Soal 3
 
 Buatlah program yang dapat memberikan input dan output sbb.
-input: 3
-output:
-321 * 123
- 21 * 12
-  1 * 1
-    *
+> <img width="183" height="175" alt="image" src="https://github.com/user-attachments/assets/19b26e9f-2fa1-4406-8aa5-006bbb76231f" />
 
 ```cpp
 #include <iostream>
