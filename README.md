@@ -1,11 +1,11 @@
 # <h1 align = "center" > Laporan Praktikum Struktur Data Modul 1 <br> Pengenalan C++ </h1>
 <p align = "center" > MUHAMMAD RIZQI AR RAFI - 103112400218 </p>
 
-## DASAR TEORI
+## Dasar Teori
 
 C++ bahasa pemrograman yang dikembangkan oleh Bjarne Stroustrup merupakan pengembangan dari bahasa C. Bahasa C++ banyak digunakan karena bahasa ini cukup efisien dan fleksibel, juga mendukung pemrograman yang berorientasi objek. Setiap program yang menggunakan C++ biasanya memiliki fungsi utama yaitu main() yang menjadi landasan program, dan kemudian diawali dengan perintah #include <iostream> untuk mengaktifkan fasilitas input-output. C++ juga memiliki variabel untuk menyimpan data seperti int, float, string, serta bool untuk nilai logika.  
 
-## GUIDED
+## Guided
 
 ### Contoh 1
 
@@ -228,7 +228,7 @@ int main()
 > Output Program
 > <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/38a70760-2ac3-425e-b2a3-55dacd24b920" />
 
-## UNGUIDED
+## Unguided
 
 ### Soal 1
 
