@@ -1,5 +1,5 @@
-# <h1 align="center">Laporan Praktikum Modul 1 <br> Pengenalan C++ </h1>
-<p align="center">MUHAMMAD RIZQI AR RAFI - 103112400218</p>
+# <h1 align = "center" > Laporan Praktikum Struktur Data Modul 1 <br> Pengenalan C++ </h1>
+<p align = "center" > MUHAMMAD RIZQI AR RAFI - 103112400218 </p>
 
 ## Dasar Teori
 
@@ -7,12 +7,14 @@ C++ bahasa pemrograman yang dikembangkan oleh Bjarne Stroustrup merupakan pengem
 
 ## Guided
 
-### soal 1
+### Contoh 1
 
+```cpp
 #include <iostream>
 #include <string>
 using namespace std;
 
+// Definisi struct
 struct Mahasiswa {
     string nama;
     string nim;
@@ -25,6 +27,7 @@ int main() {
 
     cout << "Masukkan Nama Mahasiswa: ";
     getline(cin, mhs1.nama);
+    // cin >> mhs1.nama;
     cout << "Masukkan NIM Mahasiswa : ";
     cin >> mhs1.nim;
     cout << "Masukkan IPK Mahasiswa : ";
@@ -37,6 +40,34 @@ int main() {
 
     return 0;
 }
+```
+
+> Output
+> ![Screenshot Program]()
+
+### Contoh 2
+
+
+
+### Contoh 3
+
+
+
+### Contoh 4
+
+
+
+### Contoh 5
+
+
+
+### Contoh 6
+
+
+
+### Contoh 7
+
+
 
 
 ## Unguided
