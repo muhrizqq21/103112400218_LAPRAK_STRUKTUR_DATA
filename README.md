@@ -1,4 +1,4 @@
-# <h1 align = "center" > Laporan Praktikum Struktur Data Modul 1 <br> Pengenalan C++ </h1>
+# <h1 align = "center" > Laporan Praktikum Struktur Data <br> Modul 1 Pengenalan C++ </h1>
 <p align = "center" > MUHAMMAD RIZQI AR RAFI - 103112400218 </p>
 
 ## Dasar Teori
