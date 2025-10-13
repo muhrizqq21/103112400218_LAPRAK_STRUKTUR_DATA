@@ -156,7 +156,7 @@ int main() {
 > <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/00a17d78-6f9f-4062-9218-b7cad7461a72" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas merupakan program yang menunjukkan cara melakukan transpose matriks 3x3. Dengan membandingkan matriks asli dan hasil transpose, kita bisa dengan jelas melihat bahwa baris pertama (1 2 3) kini menjadi kolom pertama, baris kedua (4 5 6) menjadi kolom kedua, dan seterusnya. </p>
+<p> Program di atas digunakan untuk menyimpan data mahasiswa dengan mengimplementasikan Abstract Data Type atau ADT, menggunakan struktur data yaitu struct dataMahasiswa, yang memiliki peran sebagai tipe data abstrak yang berfungsi untuk menggabungkan semua informasi mahasiswa ke dalam satu entitas. Program ini juga menerapkan pemisahan kode sesuai prinsip Abstract Data Type atau ADT, yaitu file nilaimahasiswa.h untuk mendefinisikan tipe data dan deklarasi fungsi, file nilaimahasiswa.cpp untuk merealisasikan fungsi-fungsi ADT, serta file main.cpp sebagai program utama yang akan menggunakan fungsi dan tipe tersebut. Secara keseluruhan, program ini bekerja dengan cara meminta pengguna untuk menginputkan jumlah mahasiswa dan data setiap mahasiswa, kemudian menghitung nilai akhir menggunakan fungsi yang sudah didefinisikan. Setelah itu, program akan menampilkan kembali semua data mahasiswa beserta nilai akhirnya. </p>
 
 ### Soal 2
 
