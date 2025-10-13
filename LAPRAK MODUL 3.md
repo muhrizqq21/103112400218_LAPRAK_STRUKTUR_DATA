@@ -55,7 +55,7 @@ int main() {
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/d7a9b7bf-9c4a-451a-87f0-8024e0237fd0" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/29c17ba2-3228-4959-83ca-255f16b32c7d" />
 
 ## Unguided
 
@@ -152,8 +152,8 @@ int main() {
 }
 ```
 > Output Program
-> 
-> 
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/cf753a18-10b9-41f0-8d87-23ed27306261" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/00a17d78-6f9f-4062-9218-b7cad7461a72" />
 
 <p> <strong> Deskripsi Program </strong> </p>
 <p> Program di atas merupakan program yang menunjukkan cara melakukan transpose matriks 3x3. Dengan membandingkan matriks asli dan hasil transpose, kita bisa dengan jelas melihat bahwa baris pertama (1 2 3) kini menjadi kolom pertama, baris kedua (4 5 6) menjadi kolom kedua, dan seterusnya. </p>
