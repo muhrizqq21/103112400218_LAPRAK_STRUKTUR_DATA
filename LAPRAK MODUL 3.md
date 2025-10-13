@@ -61,54 +61,99 @@ int main() {
 
 ### Soal 1
 
-Buatlah sebuah program untuk melakukan transpose pada sebuah matriks persegi berukuran 3x3. Operasi transpose adalah mengubah baris menjadi kolom dan sebaliknya. Inisialisasi matriks awal di dalam kode, kemudian buat logika untuk melakukan transpose dan simpan hasilnya ke dalam matriks baru. Terakhir, tampilkan matriks awal dan matriks hasil transpose.
+Buat program yang dapat menyimpan data mahasiswa (max. 10) ke dalam sebuah array dengan field nama, nim, uts, uas, tugas, dan nilai akhir. Nilai akhir diperoleh dari FUNGSI dengan rumus 0.3*uts+0.4*uas+0.3*tugas.
 
-Contoh Output:
+nilaimahasiswa.h
+```h
+#ifndef NILAIMAHASISWA_H_INCLUDED
+#define NILAIMAHASISWA_H_INCLUDED
+#include <iostream>
 
-Matriks Awal:
-<p> 1 2 3 </p>
-<p> 4 5 6 </p>
-<p> 7 8 9 </p>
+using namespace std;
+struct dataMahasiswa {
+    string namaMahasiswa;
+    string nimMahasiswa;
+    float nilaiUTS, nilaiUAS, nilaiTugas, nilaiAkhirMahasiswa;
+};
 
-Matriks Hasil Transpose:
-<p> 1 4 7 </p>
-<p> 2 5 8 </p>
-<p> 3 6 9 </p>
+void inputMahasiswa(dataMahasiswa &m);
 
+float hitungNilaiAkhirMahasiswa(dataMahasiswa m);
+
+void tampilMahasiswa(dataMahasiswa m);
+
+#endif
+```
+
+nilaimahasiswa.cpp
 ```cpp
+#include "nilaimahasiswa.h"
 #include <iostream>
 using namespace std;
 
-void cetakMatriks(int matriks[3][3], const char* judul) {
-    cout << judul << endl;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            cout << matriks[i][j] << " ";
-        }
-        cout << endl;
-    }
+void inputMahasiswa(dataMahasiswa &m) {
+    cout << "Nama: ";
+    cin >> m.namaMahasiswa;
+    cout << "NIM: ";
+    cin >> m.nimMahasiswa;
+    cout << "Nilai UTS: ";
+    cin >> m.nilaiUTS;
+    cout << "Nilai UAS: ";
+    cin >> m.nilaiUAS;
+    cout << "Nilai Tugas: ";
+    cin >> m.nilaiTugas;
+
+    m.nilaiAkhirMahasiswa = hitungNilaiAkhirMahasiswa(m);
 }
 
+float hitungNilaiAkhirMahasiswa(dataMahasiswa m) {
+    return (0.3 * m.nilaiUTS) + (0.4 * m.nilaiUAS) + (0.3 * m.nilaiTugas);
+}
+
+void tampilMahasiswa(dataMahasiswa m) {
+    cout << "\nNama        : " << m.namaMahasiswa
+         << "\nNIM         : " << m.nimMahasiswa
+         << "\nUTS         : " << m.nilaiUTS
+         << "\nUAS         : " << m.nilaiUAS
+         << "\nTugas       : " << m.nilaiTugas
+         << "\nNilai Akhir : " << m.nilaiAkhirMahasiswa
+         << endl;
+}
+```
+
+main.cpp
+```cpp
+#include "nilaimahasiswa.h"
+#include <iostream>
+using namespace std;
+
 int main() {
-    int matriksDiberikan[3][3] = {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 9}
-    };
-    int transposeMatriks[3][3];
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            transposeMatriks[j][i] = matriksDiberikan[i][j];
-        }
+    dataMahasiswa mhs[10];
+    int jumlahMahasiswa;
+
+    cout << "Masukkan Jumlah Mahasiswa (Maks. 10): ";
+    cin >> jumlahMahasiswa;
+    if (jumlahMahasiswa > 10) {
+        cout << "Maksimal hanya ada 10 data! Akan disimpan 10 mahasiswa pertama saja.\n";
+        jumlahMahasiswa = 10;
     }
-    cetakMatriks(matriksDiberikan, "Matriks Awal:");
-    cout << endl;
-    cetakMatriks(transposeMatriks, "Matriks Hasil Transpose:");
+
+    for (int i = 0; i < jumlahMahasiswa; i++) {
+        cout << "\nData Mahasiswa ke-" << i + 1 << endl;
+        inputMahasiswa(mhs[i]);
+    }
+
+    cout << "\n=== Daftar Data Mahasiswa ===\n";
+    for (int i = 0; i < jumlahMahasiswa; i++) {
+        cout << "\nMahasiswa ke-" << i + 1;
+        tampilMahasiswa(mhs[i]);
+    }
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7f980eff-1f17-4625-a19b-90a4ed042ad5" />
+> 
+> 
 
 <p> <strong> Deskripsi Program </strong> </p>
 <p> Program di atas merupakan program yang menunjukkan cara melakukan transpose matriks 3x3. Dengan membandingkan matriks asli dan hasil transpose, kita bisa dengan jelas melihat bahwa baris pertama (1 2 3) kini menjadi kolom pertama, baris kedua (4 5 6) menjadi kolom kedua, dan seterusnya. </p>
