@@ -232,9 +232,79 @@ Buatlah program dengan ketentuan :
 - fungsi/prosedur yang akan menukarkan isi dari 2 array integer 2D pada posisi tertentu
 - fungsi/prosedur yang akan menukarkan isi dari variabel yang ditunjuk oleh 2 buah pointer
 
-```
+```cpp
+#include <iostream>
+using namespace std;
 
+void tampilArray(int arr[3][3]) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << arr[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+void tukarPosisi(int arr1[3][3], int arr2[3][3], int baris, int kolom) {
+    int temp = arr1[baris][kolom];
+    arr1[baris][kolom] = arr2[baris][kolom];
+    arr2[baris][kolom] = temp;
+}
+
+void tukarPointer(int *p1, int *p2) {
+    int temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+}
+
+int main() {
+    int A[3][3] = {
+        {9, 8, 7},
+        {6, 5, 4},
+        {3, 2, 1}
+    };
+
+    int B[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    cout << "Array A:" << endl;
+    tampilArray(A);
+
+    cout << "Array B:" << endl;
+    tampilArray(B);
+
+    int baris = 2, kolom = 1; 
+    tukarPosisi(A, B, baris, kolom);
+
+    cout << "\nArray A setelah ditukar:" << endl;
+    tampilArray(A);
+
+    cout << "Array B setelah ditukar:" << endl;
+    tampilArray(B);
+
+    int x = 15, y = 5;
+    int *p1 = &x;
+    int *p2 = &y;
+
+    cout << "\nSebelum ditukar:" << endl;
+    cout << "x = " << x << ", y = " << y << endl;
+
+    tukarPointer(p1, p2);
+
+    cout << "Setelah ditukar:" << endl;
+    cout << "x = " << x << ", y = " << y << endl;
+
+    return 0;
+}
 ```
+> Output Program
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b2f3636e-32dd-4fa4-a667-9fb9441ff813" />
+
+<p> <strong> Deskripsi Program </strong> </p>
+<p> Program di atas menggunakan 2 array 2D berdimensi 3×3 serta 2 pointer integer yang digunakan untuk mempraktikkan konsep fungsi serta manipulasi data. Program ini mempunyai prosedur yang digunakan untuk menampilkan isi array 2D, mengubah elemen antara 2 array pada posisi tertentu, dan mengubah nilai dari 2 variabel menggunakan pointer. </p>
 
 ## Referensi
 
