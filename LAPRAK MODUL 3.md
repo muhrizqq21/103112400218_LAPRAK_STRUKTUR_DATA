@@ -226,7 +226,15 @@ int main() {
 
 ### Soal 3
 
+Buatlah program dengan ketentuan :
+- 2 buah array 2D integer berukuran 3x3 dan 2 buah pointer integer
+- fungsi/prosedur yang menampilkan isi sebuah array integer 2D
+- fungsi/prosedur yang akan menukarkan isi dari 2 array integer 2D pada posisi tertentu
+- fungsi/prosedur yang akan menukarkan isi dari variabel yang ditunjuk oleh 2 buah pointer
 
+```
+
+```
 
 ## Referensi
 
