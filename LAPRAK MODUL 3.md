@@ -160,34 +160,73 @@ int main() {
 
 ### Soal 2
 
-Buatlah program yang menunjukkan penggunaan call by reference. Buat sebuah prosedur bernama kuadratkan yang menerima satu parameter integer secara referensi (&). Prosedur ini akan mengubah nilai asli variabel yang dilewatkan dengan nilai kuadratnya. Tampilkan nilai variabel di main() sebelum dan sesudah memanggil prosedur untuk membuktikan perubahannya. 
+<p> Buatlah ADT pelajaran sebagai berikut di dalam file “pelajaran.h”: </p> 
+<img width="873" height="154" alt="image" src="https://github.com/user-attachments/assets/6428c687-026e-46fb-81df-e33f799f5497" />
+<p> Buatlah implementasi ADT pelajaran pada file “pelajaran.cpp” </p>
+<p> Cobalah hasil implementasi ADT pada file “main.cpp” </p>
+<img width="998" height="218" alt="image" src="https://github.com/user-attachments/assets/b4a541f9-a843-414f-9aad-24c2530ebce2" />
+<p> Contoh Output Hasil: </p>
+<img width="420" height="65" alt="image" src="https://github.com/user-attachments/assets/cd2f4b1c-e6cc-4129-b5df-638de4693415" />
 
-Contoh Output:
+pelajaran.h
+```h
+#ifndef PELAJARAN_H_INCLUDED
+#define PELAJARAN_H_INCLUDED
+#include <string>
+using namespace std;
 
-<p> Nilai awal: 5 </p>
-<p> Nilai setelah dikuadratkan: 25 </p>
+struct pelajaran {
+    string namaMapel;
+    string kodeMapel;
+};
 
+pelajaran create_pelajaran(string namapel, string kodepel);
+void tampil_pelajaran(pelajaran pel);
+#endif
+```
+
+pelajaran.cpp
 ```cpp
+#include "pelajaran.h"
 #include <iostream>
 using namespace std;
 
-void kuadrat(int &bil) {
-    bil = bil * bil;
+pelajaran create_pelajaran(string namapel, string kodepel) {
+    pelajaran p;
+    p.namaMapel = namapel;
+    p.kodeMapel = kodepel;
+    return p;
 }
 
+void tampil_pelajaran(pelajaran pel) {
+    cout << "Nama Mata Kuliah: " << pel.namaMapel << endl;
+    cout << "Kode Mata Kuliah: " << pel.kodeMapel << endl;
+}
+```
+
+main.cpp
+```cpp
+#include "pelajaran.h"
+#include <iostream>
+using namespace std;
+
 int main() {
-    int nilai = 5;
-    cout << "Nilai Awal: " << nilai << endl;
-    kuadrat(nilai);
-    cout << "Nilai AKhir Setelah Dikuadratkan: " << nilai << endl;
+    string namapel = "Struktur Data";
+    string kodepel = "STD";
+    pelajaran pel = create_pelajaran(namapel, kodepel);
+    tampil_pelajaran(pel);
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/25b8c3c9-62dd-444e-a0d8-96715b363932" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/8e47a069-5517-43a3-95db-f5dacd4702e7" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas adalah program yang memodifikasi variabel nilai secara langsung melalui prosedur kuadrat. Prosedur ini menerima alamat memori variabel, bukan salinannya. Hasilnya, nilai awal 5 berhasil diubah menjadi 25 setelah pemanggilan prosedur. </p>
+<p> Program di atas adalah program yang menerapkan konsep Abstract Data Type atau ADT untuk menyimpan data pelajaran berisikan nama mata kuliah dan kode mata kuliah. Struktur data pelajaran digunakan sebagai tipe abstrak, dengan fungsi create_pelajaran() yang digunakan untuk membuat objek pelajaran baru dan prosedur tampil_pelajaran() untuk menampilkan datanya. Kemudian, program dibagi menjadi tiga file, yaitu pelajaran.h untuk mendefinisikan tipe dan mendeklarasikan fungsi, pelajaran.cpp untuk mengimplementasikan fungsi, serta main.cpp sebagai program utama yang akan menguji ADT atau program tersebut. </p>
+
+### Soal 3
+
+
 
 ## Referensi
 
