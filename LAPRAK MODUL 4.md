@@ -421,7 +421,7 @@ int main() {
 > <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7195a982-7395-4e73-aa74-83ab80b68861" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas adalah program membalik atau reverse yang menerapkan konsep dasar struktur data dinamis yang menggunakan node dan pointer sebagaimana dijelaskan dalam materi modul. Setiap node berisikan data berupa angka dan pointer yang menunjuk ke node berikutnya, sedangkan pointer head menunjuk ke elemen pertama dalam list. Kemudian, proses pembalikan atau reverse akan dilakukan dengan memanfaatkan tiga pointer, yaitu prev, current, dan next, yang secara berurutan digunakan untuk membalik arah hubungan antar node sehingga urutan data berubah dari awal ke akhir menjadi sebaliknya. </p>
+<p> Program di atas adalah program membalik atau reverse yang menerapkan konsep dasar struktur data dinamis yang menggunakan node dan pointer sebagaimana yang sudah dijelaskan dalam materi modul. Setiap node berisikan data berupa angka dan pointer yang menunjuk ke node berikutnya, sedangkan pointer head menunjuk ke elemen pertama dalam list. Kemudian, proses pembalikan atau reverse akan dilakukan dengan memanfaatkan tiga pointer, yaitu prev, current, dan next, yang secara berurutan digunakan untuk membalik arah hubungan antar node sehingga urutan data berubah dari awal ke akhir menjadi sebaliknya. </p>
 
 ## Referensi
 
