@@ -198,6 +198,9 @@ int main() {
 > Output Program
 > <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5d7fbd3c-3625-4f00-8311-fed44f0fd79c" />
 
+<p> <strong> Deskripsi Program </strong> </p>
+<p> Program di atas adalah program yang mengimplementasikan struktur data single linked list yang memungkinkan pengguna bisa melakukan berbagai operasi dasar. Program di atas mendefinisikan sebuah struct bernama Node yang memiliki dua komponen yaitu data yang akan digunakan untuk menyimpan nilai integer dan pointer next yang akan digunakan untuk menunjuk ke node berikutnya. Kemudian, terdapat juga fungsi-fungsi untuk memodifikasi linked list, seperti menambah data di depan (insertDepan), menambah data di belakang (insertBelakang), dan menambah data setelah data tertentu (insertSetelah). Selain itu, program di atas juga menyediakan fungsi untuk menghapus (hapusNode) dan fungsi untuk memperbarui (updateNode) data yang sudah ada di dalam list. Lalu, fungsi tampilkanList akan digunakan untuk mencetak seluruh isi dari linked list ke layar. Semua operasi ini dikelola melalui sebuah menu interaktif di dalam fungsi main, yang di mana pengguna bisa memilih tindakan yang pengguna inginkan dengan memasukkan angka, dan program akan terus berjalan sampai pengguna memilih opsi untuk keluar. </p>
+
 ## Unguided
 
 ### Soal 1
