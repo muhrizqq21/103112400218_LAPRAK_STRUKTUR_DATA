@@ -57,6 +57,9 @@ int main() {
 > Output Program
 > <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/29c17ba2-3228-4959-83ca-255f16b32c7d" />
 
+<p> <strong> Deskripsi Program </strong> </p>
+<p> Program di atas adalah program untuk menghitung nilai rata-rata dari mahasiswa dengan menggunakan struktur data dan fungsi yang dipisah dalam beberapa file berbeda namun tetap satu program. Terdapat file header mahasiswa.h yang digunakan untuk mendefinisikan sebuah struct bernama mahasiswa yang berisikan NIM (akan disimpan sebagai char nim[10]) dan juga dua nilai integer (nilai1, nilai2), serta mendeklarasikan dua fungsi: inputMhs untuk menginputkan data mahasiswa dan rata2 untuk menghitung rata-rata nilai mahasiswa. Kemudian, implementasi fungsi-fungsi ini terdapat dalam file mahasiswa.cpp, yang di mana inputMhs akan meminta pengguna memasukkan NIM dan kedua nilai dari mahasiswa, sementara fungsi rata2 akan menjumlahkan kedua nilai mahasiswa tersebut dan akan membaginya dua untuk mendapatkan nilai rata-rata. Lalu, program utama dalam main.cpp akan membuat sebuah variabel mahasiswa bernama mhs, dan memanggil fungsi inputMhs untuk mengisi datanya, lalu memanggil fungsi rata2 untuk menghitung dan menampilkan hasilnya ke layar. </p>
+
 ## Unguided
 
 ### Soal 1
