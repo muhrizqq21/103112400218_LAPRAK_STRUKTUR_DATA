@@ -3,7 +3,7 @@
 
 ## Dasar Teori
 
-Stack merupakan struktur informasi linear yang beroperasi memakai prinsip LIFO (Last In First Out), di mana elemen yang terakhir dimasukkan merupakan elemen yang awal kali diambil. Seluruh akses serta operasi pada stack, baik penyisipan ataupun pengambilan informasi, cuma bisa dicoba lewat satu titik utama yang diucap "Top". 2 operasi fundamental pada stack merupakan Push, ialah operasi buat menyisipkan elemen baru ke posisi Top (mirip dengan insert first pada list), serta Pop, ialah operasi buat mengambil elemen yang terletak di posisi Top (mirip dengan delete first). Stack bisa diimplementasikan memakai 2 representasi utama yaitu representasi pointer (memakai linked list) serta representasi tabel (memakai array).
+Stack merupakan struktur informasi linear yang beroperasi memakai prinsip LIFO (Last In First Out), di mana elemen yang terakhir dimasukkan merupakan elemen yang awal kali diambil. Seluruh akses serta operasi pada stack, baik penyisipan ataupun pengambilan informasi, cuma bisa dicoba lewat satu titik utama yang diucap "Top". Dua operasi fundamental pada stack merupakan Push, ialah operasi buat menyisipkan elemen baru ke posisi Top (mirip dengan insert first pada list), serta Pop, ialah operasi buat mengambil elemen yang terletak di posisi Top (mirip dengan delete first). Stack bisa diimplementasikan memakai dua representasi utama yaitu representasi pointer (memakai linked list) serta representasi tabel (memakai array).
 
 ## Guided
 
