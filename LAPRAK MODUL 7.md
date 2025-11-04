@@ -13,398 +13,167 @@ Stack merupakan struktur informasi linear yang beroperasi memakai prinsip LIFO (
 #include <iostream>
 using namespace std;
 
-// ========
-// STRUKTUR NODE
-// ========
+// Struktur Node
 struct Node {
     int data;
-    Node* prev;
     Node* next;
 };
 
-// POINTER GLOBAL
-Node* head = nullptr;
-Node* tail = nullptr;
-
-void insertDepan(int data) {
-    Node* newNode = new Node();
-    newNode->data = data;
-    newNode->prev = nullptr;
-    newNode->next = head;
-
-    if (head != nullptr) {
-        head->prev = newNode;
-    } else {
-        tail = newNode; // Jika list kosong, tail juga menunjuk ke newNode
-    }
-
-    head = newNode;
-    cout << "Data " << data << " berhasil ditambahkan di depan.\n";
+bool isEmpty(Node *top) {
+    return top == nullptr;
 }
 
-// FUNGSI INSERT BELAKANG
-void insertBelakang(int data) {
+void push(Node *&top, int data) {
     Node* newNode = new Node();
     newNode->data = data;
-    newNode->next = nullptr;
-    newNode->prev = tail;
-
-    if (tail != nullptr) {
-        tail->next = newNode;
-    } else {
-        head = newNode; // Jika list kosong, head juga menunjuk ke newNode
-    }
-
-    tail = newNode;
-    cout << "Data " << data << " berhasil ditambahkan di belakang.\n";
+    newNode->next = top;
+    top = newNode;
 }
 
-// FUNGSI INSERT SETELAH
-void insertSetelah(int target, int data) {
-    Node* current = head;
-    while (current != nullptr && current->data != target) {
-        current = current->next;
+int pop(Node *&top)
+{
+    if (isEmpty(top)){
+        cout << "Stack Kosong, Tidak Bisa Pop" << endl;
+        return 0;
     }
 
-    if (current == nullptr) {
-        cout << "Data target " << target << " tidak ditemukan.\n";
-        return;
-    }
+    int poppedData = top->data;
+    Node *temp = top;
+    top = top->next;
 
-    Node* newNode = new Node();
-    newNode->data = data;
-    newNode->next = current->next;
-    newNode->prev = current;
-
-    if (current->next != nullptr) {
-        current->next->prev = newNode;
-    } else {
-        tail = newNode; // Jika menambahkan di akhir, update tail
-    }
-
-    current->next = newNode;
-    cout << "Data " << data << " berhasil ditambahkan setelah " << target << ".\n";
-}
-
-// FUNGSI HAPUS DEPAN
-void hapusDepan() {
-    if (head == nullptr) {
-        cout << "List kosong, tidak ada yang dihapus.\n";
-        return;
-    }
-
-    Node* temp = head;
-    head = head->next;
-
-    if (head != nullptr) {
-        head->prev = nullptr;
-    } else {
-        tail = nullptr; // Jika list menjadi kosong, update tail
-    }
-
-    cout << "Data " << temp->data << " di depan berhasil dihapus.\n";
     delete temp;
+    return poppedData;
 }
 
-// FUNGSI HAPUS BELAKANG
-void hapusBelakang() {
-    if (tail == nullptr) {
-        cout << "List kosong, tidak ada yang dihapus.\n";
+void show(Node *top) {
+    if (isEmpty(top)) {
+        cout << "Stack kosong.\n";
         return;
     }
 
-    Node* temp = tail;
-    tail = tail->prev;
+    cout << "TOP -> ";
+    Node *temp = top;
 
-    if (tail != nullptr) {
-        tail->next = nullptr;
-    } else {
-        head = nullptr; // Jika list menjadi kosong, update head
+    while (temp != nullptr) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
     }
-
-    cout << "Data " << temp->data << " di belakang berhasil dihapus.\n";
-    delete temp;
+    cout << "NULL" << endl;
 }
 
-// HAPUS DATA
-void hapusData(int target) {
-    if (head == nullptr) {
-        cout << "List kosong, tidak ada yang dihapus.\n";
-        return;
-    }
+int main(){
+    Node *stack = nullptr;
 
-    Node* current = head;
-    while (current != nullptr && current->data != target) {
-        current = current->next;
-    }
+    push(stack, 10);
+    push(stack, 20);
+    push(stack, 30);
 
-    if (current == nullptr) {
-        cout << "Data " << target << " tidak ditemukan.\n";
-        return;
-    }
+    cout << "Isi Stack setelah push:\n";
+    show(stack);
 
-    if (current == head) {
-        hapusDepan();
-    } else if (current == tail) {
-        hapusBelakang();
-    } else {
-        current->prev->next = current->next;
-        current->next->prev = current->prev;
-        cout << "Data " << target << " berhasil dihapus.\n";
-        delete current;
-    }
-}
+    cout << "Pop: " << pop(stack) << endl;
 
-// UPDATE DATA
-void updateData(int oldData, int newData) {
-    Node* current = head;
-    while (current != nullptr && current->data != oldData)
-        current = current->next;
-
-    if (current == nullptr) {
-        cout << "Data " << oldData << " tidak ditemukan.\n";
-        return;
-    }
-
-    current->data = newData;
-    cout << "Data " << oldData << " diubah menjadi " << newData << ".\n";
-}
-
-// TAMPILKAN DARI DEPAN
-void tampilDepan() {
-    if (head == nullptr) {
-        cout << "List kosong.\n";
-        return;
-    }
-
-    cout << "Isi list (dari depan): ";
-    Node* current = head;
-    while (current != nullptr) {
-        cout << current->data << " ";
-        current = current->next;
-    }
-    cout << "\n";
-}
-
-// ====================================
-// Fungsi: Tampilkan dari belakang
-// ====================================
-void tampilBelakang() {
-    if (tail == nullptr) {
-        cout << "List kosong.\n";
-        return;
-    }
-
-    cout << "Isi list (dari belakang): ";
-    Node* current = tail;
-    while (current != nullptr) {
-        cout << current->data << " ";
-        current = current->prev;
-    }
-    cout << "\n";
-}
-
-// ====================================
-// MAIN PROGRAM (MENU INTERAKTIF)
-// ====================================
-int main() {
-    int pilihan, data, target, oldData, newData;
-
-    do {
-        cout << "\n===== MENU DOUBLE LINKED LIST =====\n";
-        cout << "1. Insert Depan\n";
-        cout << "2. Insert Belakang\n";
-        cout << "3. Insert Setelah Data\n";
-        cout << "4. Hapus Depan\n";
-        cout << "5. Hapus Belakang\n";
-        cout << "6. Hapus Data Tertentu\n";
-        cout << "7. Update Data\n";
-        cout << "8. Tampil dari Depan\n";
-        cout << "9. Tampil dari Belakang\n";
-        cout << "0. Keluar\n";
-        cout << "===================================\n";
-        cout << "Pilih menu: ";
-        cin >> pilihan;
-
-        switch (pilihan) {
-            case 1:
-                cout << "Masukkan data: ";
-                cin >> data;
-                insertDepan(data);
-                break;
-            case 2:
-                cout << "Masukkan data: ";
-                cin >> data;
-                insertBelakang(data);
-                break;
-            case 3:
-                cout << "Masukkan data target: ";
-                cin >> target;
-                cout << "Masukkan data baru: ";
-                cin >> data;
-                insertSetelah(target, data);
-                break;
-            case 4:
-                hapusDepan();
-                break;
-            case 5:
-                hapusBelakang();
-                break;
-            case 6:
-                cout << "Masukkan data yang ingin dihapus: ";
-                cin >> target;
-                hapusData(target);
-                break;
-            case 7:
-                cout << "Masukkan data lama: ";
-                cin >> oldData;
-                cout << "Masukkan data baru: ";
-                cin >> newData;
-                updateData(oldData, newData);
-                break;
-            case 8:
-                tampilDepan();
-                break;
-            case 9:
-                tampilBelakang();
-                break;
-            case 0:
-                cout << "👋 Keluar dari program.\n";
-                break;
-            default:
-                cout << "Pilihan tidak valid.\n";
-        }
-
-    } while (pilihan != 0);
+    cout << "Menampilkan sisa stack: \n";
+    show(stack);
 
     return 0;
+
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5f941a98-1ff2-4dfb-aa40-e37839bb958d" />
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/0256b77c-ec87-4480-a5da-88b7dbcd100c" />
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/87424e55-4724-4b54-ba83-9a3c83d95a12" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5e9a47f8-a0b3-4ec3-86b6-115ec42d0995" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program C++ di atas adalah program yang mengimplementasikan struktur data Doubly Linked List yang akan menggunakan pointer global head dan tail untuk mengelola list. Kemudian, program ini menyediakan fungsionalitas yang lengkap untuk memanipulasi data, termasuk operasi penambahan seperti penambahan di depan, di belakang, dan setelah data tertentu, juga operasi penghapusan seperti hapus dari depan, dari belakang, dan data spesifik, serta fungsi untuk memperbarui nilai data. Lalu, untuk keunggulan dari Doubly Linked List didemonstrasikan melalui dua fungsi tampilan yang dapat mencetak isi list dari dua arah, yaitu dari depan (tampilDepan) dan dari belakang (tampilBelakang). Seluruh fungsionalitas ini dirangkum dalam sebuah menu interaktif berbasis teks di dalam fungsi main, yang memungkinkan pengguna untuk memilih operasi yang diinginkan secara dinamis. </p>
+<p> Program di atas merupakan program yang mengimplementasikan struktur data Stack (tumpukan) yang memakai representasi pointer (linked list). Program ini mendefinisikan struct Node selaku elemen stack serta mengimplementasikan operasi-operasi dasar yaitu push buat menyisipkan elemen di top, pop buat mengambil elemen dari top, serta isEmpty buat mengecek apakah stack kosong. Fungsi main berperan selaku driver buat menguji fungsionalitas ini dengan melaksanakan tiga kali push (10, 20, 30), kemudian satu kali pop, serta menunjukkan isi stack sehabis tiap operasi memakai fungsi show. </p>
 
 ## Unguided
 
 ### Soal 1
 
-Buatlah ADT Doubly Linked list sebagai berikut di dalam file “Doublylist.h”:
-```
-Type infotype : kendaraan <
-nopol : string
-warna : string
-thnBuat : integer
->
-Type address : pointer to ElmList
-Type ElmList <
-info : infotype
-next :address
-prev : address
->
-Type List <
-First : address
-Last : address
->
-procedure CreateList( input/output L : List )
-function alokasi( x : infotype ) → address
-procedure dealokasi(input/output P : address )
-procedure printInfo( input L : List )
-procedure insertLast(input/output L : List,
-input P : address )
-```
-Buatlah implementasi ADT Doubly Linked list pada file “Doublylist.cpp” dan coba hasil implementasi ADT pada file “main.cpp”.
-<p> Contoh Output: </p>
-<img width="327" height="530" alt="image" src="https://github.com/user-attachments/assets/a185362e-053a-4236-8eb8-bf201768798a" />
+Buatlah ADT Stack menggunakan ARRAY sebagai berikut di dalam file "stack.h":
+> <img width="700" height="709" alt="image" src="https://github.com/user-attachments/assets/a3d1e4ac-b878-459d-b6f6-cbb4262f1eaf" />
 
-doublylist.h
+stack.h
 ```h
-#ifndef DOUBLYLIST_H_INCLUDED
-#define DOUBLYLIST_H_INCLUDED
+#ifndef STACK_H
+#define STACK_H
 
 #include <iostream>
-#include <string>
 using namespace std;
 
-struct infotype {
-    string nopol;
-    string warna;
-    int thnBuat;
+typedef int infotype;
+
+struct Stack {
+    infotype info[20];
+    int top;
 };
 
-typedef struct ElmList *address;
+void CreateStack(Stack &S);
 
-struct ElmList {
-    infotype info;
-    address next;
-    address prev;
-};
+void push(Stack &S, infotype x);
 
-struct List {
-    address First;
-    address Last;
-};
+infotype pop(Stack &S);
 
-void CreateList(List &L);
+void printInfo(Stack S);
 
-address alokasi(infotype x);
-
-void dealokasi(address &P);
-
-void printInfo(List L);
-
-void insertLast(List &L, address P);
+void balikStack(Stack &S);
 
 #endif
 ```
 
-doublylist.cpp
+stack.cpp
 ```cpp
-#include "doublylist.h"
+#include "stack.h"
 
-void CreateList(List &L) {
-    L.First = NULL;
-    L.Last = NULL;
+void CreateStack(Stack &S) {
+    S.top = -1;
 }
 
-address alokasi(infotype x) {
-    address P = new ElmList;
-    P->info = x;
-    P->next = NULL;
-    P->prev = NULL;
-    return P;
-}
-
-void dealokasi(address &P) {
-    delete P;
-    P = NULL;
-}
-
-void insertLast(List &L, address P) {
-    if (L.First == NULL) {
-        L.First = P;
-        L.Last = P;
+void push(Stack &S, infotype x) {
+    if (S.top < 19) {
+        S.top++;
+        S.info[S.top] = x;
     } else {
-        L.Last->next = P;
-        P->prev = L.Last;
-        L.Last = P;
+        cout << "Stack penuh!" << endl;
     }
 }
 
-void printInfo(List L) {
-    address P = L.Last; 
-    if (P == NULL) {
-        cout << "List kosong" << endl;
-        return;
+infotype pop(Stack &S) {
+    if (S.top != -1) {
+        infotype x = S.info[S.top];
+        S.top--;
+        return x;
+    } else {
+        cout << "Stack kosong!" << endl;
+        return -1;
     }
-    while (P != NULL) {
-        cout << "\nno polisi : " << P->info.nopol << endl;
-        cout << "warna     : " << P->info.warna << endl;
-        cout << "tahun     : " << P->info.thnBuat << endl;
-        P = P->prev; 
+}
+
+void printInfo(Stack S) {
+    cout << "[TOP] ";
+    if (S.top != -1) {
+        for (int i = S.top; i >= 0; i--) {
+            cout << S.info[i] << " ";
+        }
+    }
+    cout << endl;
+}
+
+void balikStack(Stack &S) {
+    Stack tempStack, tempStack2;
+    CreateStack(tempStack);
+    CreateStack(tempStack2);
+
+    while (S.top != -1) {
+        push(tempStack, pop(S));
+    }
+
+    while (tempStack.top != -1) {
+        push(tempStack2, pop(tempStack));
+    }
+
+    while (tempStack2.top != -1) {
+        push(S, pop(tempStack2));
     }
 }
 ```
@@ -412,368 +181,312 @@ void printInfo(List L) {
 main.cpp
 ```cpp
 #include <iostream>
-#include "doublylist.h"
+#include "stack.h"
 
 using namespace std;
 
 int main() {
-    List L;
-    infotype dataIn;
-    address P;
-
-    CreateList(L);
-
-    for (int i = 0; i < 4; i++) {
-        cout << "\nmasukkan nomor polisi: ";
-        cin >> dataIn.nopol;
-        cout << "masukkan warna kendaraan: ";
-        cin >> dataIn.warna;
-        cout << "masukkan tahun kendaraan: ";
-        cin >> dataIn.thnBuat;
-
-        P = alokasi(dataIn);
-        insertLast(L, P);
-    }
-
-    cout << endl;
-    cout << "DATA LIST 1\n" << endl;
-    printInfo(L);
-
+    cout << "Hello World!!" << endl;
+    Stack S;
+    CreateStack(S);
+    push(S, 3);
+    push(S, 4);
+    push(S, 8);
+    pop(S);
+    push(S, 2);
+    push(S, 3);
+    pop(S);
+    push(S, 9);
+    printInfo(S);
+    cout << "balik stack" << endl;
+    balikStack(S);
+    printInfo(S);
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/246ec48a-d212-43de-b0ae-9e9d94f93bb9" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f6ddc49c-e5e8-480f-91c1-e19829a32018" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas adalah program implementasi Abstract Data Type (ADT) untuk Doubly Linked List dalam C++ yang akan dirancang khusus untuk mengelola data kendaraan. Kemudian, untuk struktur infotype didefinisikan sebagai record kendaraan yang menyimpan nopol (string), warna (string), dan thnBuat (integer). Deklarasi ADT, termasuk struktur List (dengan pointer First dan Last) ditempatkan di file doublylist.h. Kemudian, implementasi fungsi-fungsi seperti CreateList, alokasi, dealokasi, printInfo, dan insertLast dibuat di file doublylist.cpp. Lalu, program utama di main.cpp akan meminta pengguna memasukkan data kendaraan baru secara berulang. Logika program akan menggunakan prosedur insertLast untuk menambahkan data, setelahnya program akan menampilkan seluruh data kendaraan yang tersimpan di dalam list menggunakan prosedur printInfo. </p>
+<p> Program pada Latihan 1 ini bertujuan buat mengimplementasikan ADT (Abstract Data Type) Stack memakai representasi tabel, ialah array. Struktur informasi Stack ini didefinisikan buat menaruh infotype integer, dengan kapasitas array info sebanyak 20 elemen serta suatu variabel top buat menandai posisi elemen paling atas. Program ini mengimplementasikan fungsi-fungsi bawah stack semacam CreateStack (inisialisasi stack), push (menambah elemen), pop (mengambil elemen), serta printInfo (mencetak isi stack). Sebagai tambahan, program ini pula membuat prosedur balikStack yang berperan buat membalik urutan seluruh elemen di dalam stack. Program utama (main.cpp) setelah itu digunakan buat menguji fungsionalitas ADT ini dengan melaksanakan serangkaian pembedahan push serta pop, mencetak hasilnya, memanggil balikStack, serta mencetak kembali isi stack yang sudah terbalik. </p>
 
 ### Soal 2
 
-Carilah elemen dengan nomor polisi D001 dengan membuat fungsi baru. 
-fungsi findElm( L : List, x : infotype ) : address
+Tambahkan prosedur pushAscending( in/out S : Stack, in x : integer)
+```
+int main()
+{
+Gambar 7-11 Output stack
+STRUKTUR DATA 65
+cout << "Hello world!" << endl;
+Stack S;
+createStack(S);
+pushAscending(S,3);
+pushAscending(S,4);
+pushAscending(S,8);
+pushAscending(S,2);
+pushAscending(S,3);
+pushAscending(S,9);
+printInfo(S);
+cout<<"balik stack"<<endl;
+balikStack(S);
+printInfo(S);
+return 0;
+}
+```
 <p> Contoh Output: </p>
-<img width="417" height="134" alt="image" src="https://github.com/user-attachments/assets/40bc8624-8366-487f-ace9-5137a2cf5525" />
+<img width="241" height="114" alt="image" src="https://github.com/user-attachments/assets/53051f33-2c4c-446d-a0e0-d1a442db121f" />
 
-doublylist.h
+stack.h
 ```h
-#ifndef DOUBLYLIST_H_INCLUDED
-#define DOUBLYLIST_H_INCLUDED
+#ifndef STACK_H
+#define STACK_H
 
 #include <iostream>
-#include <string>
 using namespace std;
 
-struct infotype {
-    string nopol;
-    string warna;
-    int thnBuat;
+typedef int infotype;
+
+struct Stack {
+    infotype info[20];
+    int top;
 };
 
-typedef struct ElmList *address;
+void CreateStack(Stack &S);
 
-struct ElmList {
-    infotype info;
-    address next;
-    address prev;
-};
+void push(Stack &S, infotype x);
 
-struct List {
-    address First;
-    address Last;
-};
+infotype pop(Stack &S);
 
-void CreateList(List &L);
+void printInfo(Stack S);
 
-address alokasi(infotype x);
+void balikStack(Stack &S);
 
-void dealokasi(address &P);
-
-void printInfo(List L);
-
-void insertLast(List &L, address P);
-
-address findElm(List L, string nopol);
+void pushAscending(Stack &S, infotype x);
 
 #endif
 ```
 
-doublylist.cpp
+stack.cpp
 ```cpp
-#include "doublylist.h"
+#include "stack.h"
 
-void CreateList(List &L) {
-    L.First = NULL;
-    L.Last = NULL;
+void CreateStack(Stack &S) {
+    S.top = -1;
 }
 
-address alokasi(infotype x) {
-    address P = new ElmList;
-    P->info = x;
-    P->next = NULL;
-    P->prev = NULL;
-    return P;
-}
-
-void dealokasi(address &P) {
-    delete P;
-    P = NULL;
-}
-
-void insertLast(List &L, address P) {
-    if (L.First == NULL) {
-        L.First = P;
-        L.Last = P;
+void push(Stack &S, infotype x) {
+    if (S.top < 19) {
+        S.top++;
+        S.info[S.top] = x;
     } else {
-        L.Last->next = P;
-        P->prev = L.Last;
-        L.Last = P;
+        cout << "Stack penuh!" << endl;
     }
 }
 
-address findElm(List L, string nopol) {
-    address P = L.First;
-    while (P != NULL) {
-        if (P->info.nopol == nopol) {
-            return P;
+infotype pop(Stack &S) {
+    if (S.top != -1) {
+        infotype x = S.info[S.top];
+        S.top--;
+        return x;
+    } else {
+        cout << "Stack kosong!" << endl;
+        return -1;
+    }
+}
+
+void printInfo(Stack S) {
+    cout << "[TOP] ";
+    if (S.top != -1) {
+        for (int i = S.top; i >= 0; i--) {
+            cout << S.info[i] << " ";
         }
-        P = P->next;
     }
-    return NULL;
+    cout << endl;
 }
 
-void printInfo(List L) {
-    address P = L.Last; 
-    if (P == NULL) {
-        cout << "List kosong" << endl;
-        return;
+void balikStack(Stack &S) {
+    Stack tempStack, tempStack2;
+    CreateStack(tempStack);
+    CreateStack(tempStack2);
+
+    while (S.top != -1) {
+        push(tempStack, pop(S));
     }
-    while (P != NULL) {
-        cout << "no polisi : " << P->info.nopol << endl;
-        cout << "warna     : " << P->info.warna << endl;
-        cout << "tahun     : " << P->info.thnBuat << endl;
-        P = P->prev;
+
+    while (tempStack.top != -1) {
+        push(tempStack2, pop(tempStack));
+    }
+
+    while (tempStack2.top != -1) {
+        push(S, pop(tempStack2));
+    }
+}
+
+void pushAscending(Stack &S, infotype x) {
+    Stack tempStack;
+    CreateStack(tempStack);
+
+    while (S.top != -1 && S.info[S.top] > x) {
+        push(tempStack, pop(S));
+    }
+
+    push(S, x);
+
+    while (tempStack.top != -1) {
+        push(S, pop(tempStack));
     }
 }
 ```
 
 main.cpp
 ```cpp
-#include "doublylist.h"
 #include <iostream>
+#include "stack.h"
 
 using namespace std;
 
 int main() {
-    List L;
-    infotype dataIn;
-    address P;
-    string nopolCari;
-
-    CreateList(L);
-    
-    for (int i = 0; i < 4; i++) {
-        cout << "\nmasukkan nomor polisi: ";
-        cin >> dataIn.nopol;
-        cout << "masukkan warna kendaraan: ";
-        cin >> dataIn.warna;
-        cout << "masukkan tahun kendaraan: ";
-        cin >> dataIn.thnBuat;
-
-        P = alokasi(dataIn);
-        insertLast(L, P);
-    }
-
-    cout << endl;
-    cout << "DATA LIST 1\n" << endl;
-    printInfo(L);
-    
-    cout << "\nMasukkan Nomor Polisi yang dicari : "; 
-    cin >> nopolCari;
-    
-    P = findElm(L, nopolCari);
-    
-    if (P != NULL) {
-        cout << "\nNomor Polisi : " << P->info.nopol << endl;
-        cout << "Warna        : " << P->info.warna << endl;
-        cout << "Tahun        : " << P->info.thnBuat << endl;
-    } else {
-        cout << "Data dengan nomor polisi " << nopolCari << " tidak ditemukan." << endl;
-    }
-
+    cout << "Hello World!!" << endl;
+    Stack S;
+    CreateStack(S);
+    pushAscending(S, 3);
+    pushAscending(S, 4);
+    pushAscending(S, 8);
+    pushAscending(S, 2);
+    pushAscending(S, 3);
+    pushAscending(S, 9);
+    printInfo(S);
+    cout << "balik stack" << endl;
+    balikStack(S);
+    printInfo(S);
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b49126f2-499f-4753-857b-963f16ff8adc" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/65709b85-70cb-4d49-81a7-3d5fb4d3251e" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas adalah pengembangan dari latihan 1 dengan menambahkan fungsionalitas pencarian elemen, dengan latihan utamanya adalah membuat sebuah fungsi baru bernama findElm yang memiliki parameter (L: List, x: infotype) dan mengembalikan tipe address. Kemudian, fungsi ini akan menelusuri Doubly Linked List untuk mencari elemen berdasarkan nopol (nomor polisi). Lalu, pada program utama (main.cpp), pengguna akan diminta untuk memasukkan nomor polisi yang ingin dicari. Setelah itu, program akan memanggil fungsi findElm dengan nomor polisi tersebut. Jika data ditemukan, program akan menampilkan detail lengkap dari kendaraan tersebut, yang terdiri dari nomor polisi, warna, dan tahun. </p>
+<p> Program pada Latihan 2 ini ialah pengembangan dari Latihan 1 dengan meningkatkan satu prosedur baru, ialah pushAscending (in/out S: Stack, in x: integer). Prosedur ini mempunyai fungsi spesial, alih-alih cuma menambahkan elemen baru (x) di posisi Top, prosedur ini hendak menyisipkan x ke dalam stack sedemikian rupa sehingga urutan data di dalam stack senantiasa terpelihara secara ascending (terurut membesar) dari dasar stack mengarah ke Top. Program utama (main.cpp) setelah itu dimodifikasi buat memanggil pushAscending secara berurutan, mengambil alih pemanggilan push biasa, buat mendemonstrasikan kalau elemen-elemen (semacam 9, 8, 4, 3, 3, 2) tersimpan secara terurut di dalam stack. </p>
 
 ### Soal 3
 
-Hapus elemen dengan nomor polisi D003 dengan procedure delete.
-- procedure deleteFirst( input/output L : List,
-P : address )
-- procedure deleteLast( input/output L : List,
-P : address )
-- procedure deleteAfter( input Prec : address,
-input/output P : address )
-<p> Contoh Output: </p>
-<img width="536" height="208" alt="image" src="https://github.com/user-attachments/assets/bdad6be3-842e-4ba4-a6b4-c2c7fafccbb9" />
+Tambahkan prosedur getInputStream( in/out S : Stack ). Prosedur akan terus membaca dan
+menerima input user dan memasukkan setiap input ke dalam stack hingga user menekan
+tombol enter. Contoh: gunakan cin.get() untuk mendapatkan inputan user.
+<img width="629" height="250" alt="image" src="https://github.com/user-attachments/assets/877496ac-8046-4284-98e3-12b1ee12d09c" />
 
-doublylist.h
+stack.h
 ```h
-#ifndef DOUBLYLIST_H_INCLUDED
-#define DOUBLYLIST_H_INCLUDED
+#ifndef STACK_H
+#define STACK_H
 
 #include <iostream>
-#include <string>
 using namespace std;
 
-struct infotype {
-    string nopol;
-    string warna;
-    int thnBuat;
+typedef int infotype;
+
+struct Stack {
+    infotype info[20];
+    int top;
 };
 
-typedef struct ElmList *address;
+void CreateStack(Stack &S);
 
-struct ElmList {
-    infotype info;
-    address next;
-    address prev;
-};
+void push(Stack &S, infotype x);
 
-struct List {
-    address First;
-    address Last;
-};
+infotype pop(Stack &S);
 
-void CreateList(List &L);
+void printInfo(Stack S);
 
-address alokasi(infotype x);
+void balikStack(Stack &S);
 
-void dealokasi(address &P);
+void pushAscending(Stack &S, infotype x);
 
-void printInfo(List L);
-
-void insertLast(List &L, address P);
-
-address findElm(List L, string nopol);
-
-void deleteFirst(List &L, address &P);
-
-void deleteLast(List &L, address &P);
-  
-void deleteAfter(List &L, address Prec, address &P); 
+void getInputStream(Stack &S);
 
 #endif
 ```
 
-doublylist.cpp
+stack.cpp
 ```cpp
-#include "doublylist.h"
+#include "stack.h"
+#include <cctype>
 
-void CreateList(List &L) {
-    L.First = NULL;
-    L.Last = NULL;
+void CreateStack(Stack &S) {
+    S.top = -1;
 }
 
-address alokasi(infotype x) {
-    address P = new ElmList;
-    P->info = x;
-    P->next = NULL;
-    P->prev = NULL;
-    return P;
-}
-
-void dealokasi(address &P) {
-    delete P;
-    P = NULL;
-}
-
-void insertLast(List &L, address P) {
-    if (L.First == NULL) {
-        L.First = P;
-        L.Last = P;
+void push(Stack &S, infotype x) {
+    if (S.top < 19) {
+        S.top++;
+        S.info[S.top] = x;
     } else {
-        L.Last->next = P;
-        P->prev = L.Last;
-        L.Last = P;
+        cout << "Stack penuh!" << endl;
     }
 }
 
-address findElm(List L, string nopol) {
-    address P = L.First;
-    while (P != NULL) {
-        if (P->info.nopol == nopol) {
-            return P;
-        }
-        P = P->next;
-    }
-    return NULL;
-}
-
-void printInfo(List L) {
-    address P = L.Last; 
-    if (P == NULL) {
-        cout << "List kosong" << endl;
-        return;
-    }
-    while (P != NULL) {
-        cout << "no polisi : " << P->info.nopol << endl;
-        cout << "warna     : " << P->info.warna << endl;
-        cout << "tahun     : " << P->info.thnBuat << endl;
-        P = P->prev;
-    }
-}
-
-void deleteFirst(List &L, address &P) {
-    if (L.First == NULL) {
-        cout << "List kosong, tidak ada yang bisa dihapus" << endl;
+infotype pop(Stack &S) {
+    if (S.top != -1) {
+        infotype x = S.info[S.top];
+        S.top--;
+        return x;
     } else {
-        P = L.First;
-        if (L.First == L.Last) {
-            L.First = NULL;
-            L.Last = NULL;
-        } else {
-            L.First = P->next;
-            L.First->prev = NULL;
-            P->next = NULL;
+        cout << "Stack kosong!" << endl;
+        return -1;
+    }
+}
+
+void printInfo(Stack S) {
+    cout << "[TOP] ";
+    if (S.top != -1) {
+        for (int i = S.top; i >= 0; i--) {
+            cout << S.info[i] << " ";
         }
     }
+    cout << endl;
 }
 
-void deleteLast(List &L, address &P) {
-    if (L.First == NULL) {
-        cout << "List kosong, tidak ada yang bisa dihapus" << endl;
-    } else {
-        P = L.Last;
-        if (L.First == L.Last) {
-            L.First = NULL;
-            L.Last = NULL;
-        } else {
-            L.Last = P->prev;
-            L.Last->next = NULL;
-            P->prev = NULL;
-        }
+void balikStack(Stack &S) {
+    Stack tempStack, tempStack2;
+    CreateStack(tempStack);
+    CreateStack(tempStack2);
+
+    while (S.top != -1) {
+        push(tempStack, pop(S));
+    }
+
+    while (tempStack.top != -1) {
+        push(tempStack2, pop(tempStack));
+    }
+
+    while (tempStack2.top != -1) {
+        push(S, pop(tempStack2));
     }
 }
 
-void deleteAfter(List &L, address Prec, address &P) {
-    if (Prec == NULL || Prec->next == NULL) {
-        cout << "Tidak ada elemen setelah Prec" << endl;
-    } else {
-        P = Prec->next;
-        
-        if (P == L.Last) {
-            deleteLast(L, P);
-        } else {
-            Prec->next = P->next;
-            P->next->prev = Prec;
-            P->next = NULL;
-            P->prev = NULL;
+void pushAscending(Stack &S, infotype x) {
+    Stack tempStack;
+    CreateStack(tempStack);
+
+    while (S.top != -1 && S.info[S.top] > x) {
+        push(tempStack, pop(S));
+    }
+
+    push(S, x);
+
+    while (tempStack.top != -1) {
+        push(S, pop(tempStack));
+    }
+}
+
+void getInputStream(Stack &S) {
+    char c;
+    
+    while ((c = std::cin.get()) != '\n') {
+        if (isdigit(c)) {
+            infotype x = c - '0';
+            push(S, x);
         }
     }
 }
@@ -781,66 +494,30 @@ void deleteAfter(List &L, address Prec, address &P) {
 
 main.cpp
 ```cpp
-#include "doublylist.h"
 #include <iostream>
+#include "stack.h"
 
 using namespace std;
 
 int main() {
-    List L;
-    infotype dataIn;
-    address P;
-    string nopolCari, nopolHapus;
+    cout << "Hello World!!" << endl;
+    Stack S;
+    CreateStack(S);
 
-    CreateList(L);
-    
-    for (int i = 0; i < 4; i++) {
-        cout << "\nMasukkan nomor polisi: ";
-        cin >> dataIn.nopol;
-        cout << "Masukkan warna kendaraan: ";
-        cin >> dataIn.warna;
-        cout << "Masukkan tahun kendaraan: ";
-        cin >> dataIn.thnBuat;
+    getInputStream(S);
 
-        P = alokasi(dataIn);
-        insertLast(L, P);
-    }
-
-    cout << endl;
-    cout << "DATA LIST 1\n" << endl;
-    printInfo(L);
-    
-    cout << "\nMasukkan Nomor Polisi yang ingin dihapus : ";
-    cin >> nopolHapus;
-
-    address target = findElm(L, nopolHapus);
-    if (target != NULL) {
-        address prec = target->prev;
-        address Q;
-
-        if (prec == NULL) {
-            deleteFirst(L, Q);
-        } else {
-            deleteAfter(L, prec, Q);
-        }
-        dealokasi(Q);
-        cout << "\nData dengan nomor polisi " << nopolHapus << " telah dihapus.\n";
-    } else {
-        cout << "\nData dengan nomor polisi " << nopolHapus << " tidak ditemukan.\n";
-    }
-
-    cout << "\nDATA LIST 1 SETELAH PENGHAPUSAN\n" << endl;
-    printInfo(L);
-
+    printInfo(S);
+    cout << "balik stack" << endl;
+    balikStack(S);
+    printInfo(S);
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ba043878-b0f0-4a34-8a8a-9bf1fd52ae3b" />
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/17b3ea4d-6c82-456e-9506-376b6b9d7266" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/0d176e60-47f0-42a0-940a-f4ff2affc937" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas merupakan program yang berfungsi untuk menghapus data kendaraan dari Doubly Linked List berdasarkan nomor polisi yang dimasukkan pengguna. Setelah itu, pengguna akan menginput beberapa data kendaraan dan list akan terbentuk, lalu program meminta pengguna memasukkan nomor polisi yang ingin dihapus. Kemudian, proses penghapusan dilakukan dengan menggunakan prosedur deleteAfter jika data yang dihapus berada di tengah list, atau deleteFirst jika data tersebut berada di awal list. Setelah data berhasil dihapus, program akan menampilkan kembali isi list yang sudah diperbarui. </p>
+<p> Program pada Latihan 3 ini akan memperkenalkan prosedur baru bernama getInputStream (in/out S: Stack). Fungsi dari prosedur ini adalah untuk secara kontinu membaca input yang dimasukkan oleh pengguna serta memasukkan tiap input tersebut ke dalam stack. Proses push input ke stack ini akan terus berlangsung sampai pengguna memencet tombol Enter, yang menunjukkan akhir dari input. Program utama (main.cpp) diganti buat memanggil getInputStream(S) selaku metode buat mengisi stack, mengambil alih pemanggilan push manual ataupun pushAscending dari latihan sebelumnya. </p>
 
 ## Referensi
 
