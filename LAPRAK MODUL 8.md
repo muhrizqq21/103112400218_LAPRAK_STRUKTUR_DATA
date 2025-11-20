@@ -109,10 +109,10 @@ int main() {
 }
 ```
 > Output Program
-> 
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/d2130554-4857-4616-9004-e5e93d97feb5" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas merupakan program yang mengimplementasikan struktur data Stack (tumpukan) yang memakai representasi pointer (linked list). Program ini mendefinisikan struct Node selaku elemen stack serta mengimplementasikan operasi-operasi dasar yaitu push buat menyisipkan elemen di top, pop buat mengambil elemen dari top, serta isEmpty buat mengecek apakah stack kosong. Fungsi main berperan selaku driver buat menguji fungsionalitas ini dengan melaksanakan tiga kali push (10, 20, 30), kemudian satu kali pop, serta menunjukkan isi stack sehabis tiap operasi memakai fungsi show. </p>
+<p> Program di atas merupakan program yang mengimplementasikan struktur data Queue memakai array statis dengan operasi enqueue serta dequeue yang mempraktikkan tata cara perpindahan elemen (shifting) dikala penghapusan data. Program ini dilengkapi fitur inisialisasi, validasi status antrean, serta pencetakan data buat mengelola antrean integer secara FIFO. </p>
 
 ## Unguided
 
