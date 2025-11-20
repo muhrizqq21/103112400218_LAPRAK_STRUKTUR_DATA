@@ -1,10 +1,9 @@
-
 # <h1 align = "center" > Laporan Praktikum Struktur Data <br> Modul 8 Queue </h1>
 <p align = "center" > MUHAMMAD RIZQI AR RAFI - 103112400218 </p>
 
 ## Dasar Teori
 
-Stack merupakan struktur informasi linear yang beroperasi memakai prinsip LIFO (Last In First Out), di mana elemen yang terakhir dimasukkan merupakan elemen yang awal kali diambil. Seluruh akses serta operasi pada stack, baik penyisipan ataupun pengambilan informasi, cuma bisa dicoba lewat satu titik utama yang diucap "Top". Dua operasi fundamental pada stack merupakan Push, ialah operasi buat menyisipkan elemen baru ke posisi Top (mirip dengan insert first pada list), serta Pop, ialah operasi buat mengambil elemen yang terletak di posisi Top (mirip dengan delete first). Stack bisa diimplementasikan memakai dua representasi utama yaitu representasi pointer (memakai linked list) serta representasi tabel (memakai array).
+Queue merupakan struktur data linear yang mempraktikkan prinsip FIFO (First In First Out), di mana elemen awal yang masuk hendak diproses terlebih dulu. Pembedahan utamanya terdiri dari Enqueue (penyisipan) pada posisi Tail serta Dequeue (penghapusan) pada posisi Head. Struktur ini bisa diimplementasikan memakai Linked List ataupun Array (Tabel) dengan bermacam tata cara pengaturan indeks semacam linear ataupun circular buffer.
 
 ## Guided
 
@@ -14,75 +13,103 @@ Stack merupakan struktur informasi linear yang beroperasi memakai prinsip LIFO (
 #include <iostream>
 using namespace std;
 
-// Struktur Node
-struct Node {
-    int data;
-    Node* next;
+#define MAX 5 // Maximum size of the queue
+
+// Queue Structure
+struct Queue {
+    int data[MAX];
+    int head;
+    int tail;
 };
 
-bool isEmpty(Node *top) {
-    return top == nullptr;
+// Create an empty queue
+void createQueue(Queue &Q) {
+    Q.head = -1;
+    Q.tail = -1;
 }
 
-void push(Node *&top, int data) {
-    Node* newNode = new Node();
-    newNode->data = data;
-    newNode->next = top;
-    top = newNode;
+// Check if the queue is empty
+bool isEmpty(Queue Q) {
+    return (Q.head == -1 && Q.tail == -1);
 }
 
-int pop(Node *&top)
-{
-    if (isEmpty(top)){
-        cout << "Stack Kosong, Tidak Bisa Pop" << endl;
-        return 0;
+// Check if the queue is full
+bool isFull(Queue Q) {
+    return (Q.tail == MAX - 1);
+}
+
+// Show the elements of the queue
+void printQueue(Queue Q) {
+    if (isEmpty(Q)) {
+        cout << "Queue is empty!" << endl;
+    } else {
+        cout << "Queue: ";
+        for (int i = Q.head; i <= Q.tail; i++) {
+            cout << Q.data[i] << " ";
+        }
+        cout << endl;
     }
-
-    int poppedData = top->data;
-    Node *temp = top;
-    top = top->next;
-
-    delete temp;
-    return poppedData;
 }
 
-void show(Node *top) {
-    if (isEmpty(top)) {
-        cout << "Stack kosong.\n";
-        return;
+// Add an element to the queue
+void enqueue(Queue &Q, int x) {
+    if (isFull(Q)) {
+        cout << "Queue is full!" << endl;
+    } else {
+        if (isEmpty(Q)) {
+            Q.head = Q.tail = 0; // Initialize head if queue was empty
+        } else {
+            Q.tail++;
+        }
+        Q.data[Q.tail] = x;
+        cout << "Enqueued: " << x << endl;
     }
-
-    cout << "TOP -> ";
-    Node *temp = top;
-
-    while (temp != nullptr) {
-        cout << temp->data << " -> ";
-        temp = temp->next;
-    }
-    cout << "NULL" << endl;
 }
 
-int main(){
-    Node *stack = nullptr;
+// Remove an element from the queue
+void dequeue(Queue &Q) {
+    if (isEmpty(Q)) {
+        cout << "Queue is empty!" << endl;
+    } else {
+        cout << "Dequeued: " << Q.data[Q.head] << endl;
+        // If only one element was present
+        if (Q.head == Q.tail) {
+            Q.head = Q.tail = -1;
+        } else {
+            // Move all elements one position to the left
+            for (int i = Q.head; i < Q.tail; i++) {
+                Q.data[i] = Q.data[i + 1];
+            }
+            Q.tail--;
+        }
+    }
+}
 
-    push(stack, 10);
-    push(stack, 20);
-    push(stack, 30);
+int main() {
+    Queue Q;
+    createQueue(Q);
 
-    cout << "Isi Stack setelah push:\n";
-    show(stack);
+    enqueue(Q, 5);
+    enqueue(Q, 2);
+    enqueue(Q, 7);
+    printQueue(Q);
 
-    cout << "Pop: " << pop(stack) << endl;
+    dequeue(Q);
+    printQueue(Q);
 
-    cout << "Menampilkan sisa stack: \n";
-    show(stack);
+    enqueue(Q, 4);
+    enqueue(Q, 9);
+    printQueue(Q);
+
+    dequeue(Q);
+    dequeue(Q);
+    printQueue(Q);
 
     return 0;
-
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5e9a47f8-a0b3-4ec3-86b6-115ec42d0995" />
+> 
 
 <p> <strong> Deskripsi Program </strong> </p>
 <p> Program di atas merupakan program yang mengimplementasikan struktur data Stack (tumpukan) yang memakai representasi pointer (linked list). Program ini mendefinisikan struct Node selaku elemen stack serta mengimplementasikan operasi-operasi dasar yaitu push buat menyisipkan elemen di top, pop buat mengambil elemen dari top, serta isEmpty buat mengecek apakah stack kosong. Fungsi main berperan selaku driver buat menguji fungsionalitas ini dengan melaksanakan tiga kali push (10, 20, 30), kemudian satu kali pop, serta menunjukkan isi stack sehabis tiap operasi memakai fungsi show. </p>
