@@ -13,87 +13,219 @@ Tree ialah struktur informasi non-linear yang ditafsirkan sebagai graf tidak ber
 #include <iostream>
 using namespace std;
 
-// Struktur Node
 struct Node {
     int data;
-    Node* next;
+    Node *kiri, *kanan;
 };
 
-bool isEmpty(Node *top) {
-    return top == nullptr;
-}
-
-void push(Node *&top, int data) {
-    Node* newNode = new Node();
-    newNode->data = data;
-    newNode->next = top;
-    top = newNode;
-}
-
-int pop(Node *&top)
+Node *buatNode(int nilai) 
 {
-    if (isEmpty(top)){
-        cout << "Stack Kosong, Tidak Bisa Pop" << endl;
-        return 0;
-    }
+    Node *baru = new Node();
+    baru->data = nilai;
+    baru->kiri = baru->kanan = NULL;
+    return baru;
+}
+//insert (sisip data ke dalam tree)
+Node *insert(Node *root, int nilai) 
+{
+    if (root == NULL) 
+        return buatNode(nilai);
+    if (nilai < root->data) 
+        root->kiri = insert(root->kiri, nilai);
+    else if (nilai > root->data) 
+        root->kanan = insert(root->kanan, nilai);
 
-    int poppedData = top->data;
-    Node *temp = top;
-    top = top->next;
-
-    delete temp;
-    return poppedData;
+    return root;
 }
 
-void show(Node *top) {
-    if (isEmpty(top)) {
-        cout << "Stack kosong.\n";
-        return;
-    }
+//search (mencari data dalam tree)
 
-    cout << "TOP -> ";
-    Node *temp = top;
-
-    while (temp != nullptr) {
-        cout << temp->data << " -> ";
-        temp = temp->next;
-    }
-    cout << "NULL" << endl;
+Node *search(Node *root, int nilai) 
+{
+    if (root == NULL || root->data == nilai)
+        return root;
+    if (nilai < root->data)
+        return search(root->kiri, nilai); //cari di subtree kiri
+    return search(root->kanan, nilai); //cari di subtree kanan
 }
 
-int main(){
-    Node *stack = nullptr;
+//Helper cari nilai minimum dalam tree
+Node *nilaiTerkecil(Node *node) 
+{
+    Node *current = node;
+    while (current && current->kiri != NULL)
+        current = current->kiri;
+    return current;
+}
 
-    push(stack, 10);
-    push(stack, 20);
-    push(stack, 30);
+//delete (menghapus data dari tree) -- untuk update data
+Node *hapus(Node *root, int nilai) 
+{
+    if (root == NULL)
+        return root;
 
-    cout << "Isi Stack setelah push:\n";
-    show(stack);
+    if (nilai < root->data)
+        root->kiri = hapus(root->kiri, nilai);
+    else if (nilai > root->data)
+        root->kanan = hapus(root->kanan, nilai);
+    else {
+        // jika data ditemukan
+        if (root->kiri == NULL) {
+            Node *temp = root->kanan;
+            delete root;
+            return temp;
+        } else if (root->kanan == NULL) {
+            Node *temp = root->kiri;
+            delete root;
+            return temp;
+        }
 
-    cout << "Pop: " << pop(stack) << endl;
+        // Node dengan dua anak: dapatkan inorder successor (nilai terkecil di subtree kanan)
+        Node *temp = nilaiTerkecil(root->kanan);
+        root->data = temp->data; 
+        root->kanan = hapus(root->kanan, temp->data); 
+    }
+    return root;
+}
 
-    cout << "Menampilkan sisa stack: \n";
-    show(stack);
+//update (mengubah data dalam tree)
+Node *update(Node *root, int lama, int baru) 
+{
+
+    if (search(root, lama) != NULL) 
+    {
+        root = hapus(root, lama);
+        root = insert(root, baru);
+        cout << "data" << lama << "berhasil diupdate menjadi" << baru << endl;
+    } else {
+    cout << "data" << lama << "tidak ditemukan!" << endl;
+    }
+    return root;
+}
+
+// traversal preorder
+void preOrder(Node *root) 
+{
+    if (root != NULL) 
+    {
+        cout << root->data << " ";
+        preOrder(root->kiri);
+        preOrder(root->kanan);
+    }
+}
+
+// traversal inorder
+void inOrder(Node *root) 
+{
+    if (root != NULL) 
+    {
+        inOrder(root->kiri);
+        cout << root->data << " ";
+        inOrder(root->kanan);
+    }
+}
+
+// traversal postorder
+void postOrder(Node *root) 
+{ //kiri kanan akar
+    if (root != NULL) 
+    {
+        postOrder(root->kiri);
+        postOrder(root->kanan);
+        cout << root->data << " ";
+    }
+}
+
+int main ()
+{
+    Node *root = NULL;
+    
+    cout << "=== 1. INSERT DATA ===" << endl;
+    root = insert (root, 10);
+    root = insert (root, 5);
+    root = insert (root, 20);
+    root = insert (root, 3);
+    root = insert (root, 7);
+    root = insert (root, 15);
+    root = insert (root, 25);
+    cout << "Data berhasil dimasukkan. \n" 
+        << endl;
+    
+    cout << "=== 2. TAMPILKAN TREE (TRAVERSAL) ===" << endl;
+    cout << "Preorder: ";
+    preOrder(root);
+    cout << endl;
+    cout << "Inorder: ";
+    inOrder(root);
+    cout << endl;
+    cout << "Postorder: ";
+    postOrder(root);
+    cout << "\n" 
+        << endl;
+
+    cout << "=== 3. TEST SEARCH ===" << endl;
+    int cari1 = 7, cari2 = 90;
+    cout << "Cari" << cari1 << ": " << (search(root, cari1) ? "Ketemu" : "Tidak Ketemu") << endl;
+    cout << "Cari" << cari2 << ": " << (search(root, cari2) ? "Ketemu" : "Tidak Ketemu") << endl;
+    cout << endl;
+
+    cout << "=== 4. TEST UPDATE ===" << endl;
+    //mengubah 5 menjadi 8
+    root = update (root, 5, 8);
+    cout << "Hasil InOrder setelah update: ";
+    cout << endl;
+    cout << endl;
+
+    cout << "Preorder: ";
+    preOrder(root);
+    cout << endl;
+    cout << "Inorder: ";
+    inOrder(root);
+    cout << endl;
+    cout << "Postorder: ";
+    postOrder(root);
+    cout << "\n" 
+        << endl;
+
+    cout << "=== 5. TEST DELETE ===" << endl;
+    //menghapus 20 (Node  yang memiliki dua anak)
+    cout << "Menghapus angka 20..." << endl;
+    root = hapus (root, 20);
+
+    cout << "Preorder: ";
+    preOrder(root);
+    cout << endl;
+    cout << "Inorder: ";
+    inOrder(root);
+    cout << endl;
+    cout << "Postorder: ";
+    postOrder(root);
+    cout << "\n" 
+        << endl;
 
     return 0;
-
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5e9a47f8-a0b3-4ec3-86b6-115ec42d0995" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1be2ca92-d741-442a-8265-4d258d7c0a94" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas merupakan program yang mengimplementasikan struktur data Stack (tumpukan) yang memakai representasi pointer (linked list). Program ini mendefinisikan struct Node selaku elemen stack serta mengimplementasikan operasi-operasi dasar yaitu push buat menyisipkan elemen di top, pop buat mengambil elemen dari top, serta isEmpty buat mengecek apakah stack kosong. Fungsi main berperan selaku driver buat menguji fungsionalitas ini dengan melaksanakan tiga kali push (10, 20, 30), kemudian satu kali pop, serta menunjukkan isi stack sehabis tiap operasi memakai fungsi show. </p>
+<p> Program di atas mengimplementasikan struktur data Binary Search Tree (BST) yang memfasilitasi operasi insert, search, update, serta delete memakai manipulasi pointer dinamis. Program mempraktikkan logika spesial pada fungsi update dengan metode menghapus data lama kemudian menyisipkan yang baru demi melindungi urutan, dan fungsi delete yang mampu menangani penghapusan node kompleks memakai metode inorder successor. Semua operasi tersebut divisualisasikan lewat 3 tata cara traversal (PreOrder, InOrder, PostOrder) yang diuji secara berentetan dalam fungsi utama buat memverifikasi struktur tree. </p>
 
 ## Unguided
 
 ### Soal 1
 
-Buatlah ADT Stack menggunakan ARRAY sebagai berikut di dalam file "stack.h":
-> <img width="700" height="709" alt="image" src="https://github.com/user-attachments/assets/a3d1e4ac-b878-459d-b6f6-cbb4262f1eaf" />
+Buatlah ADT Binary Search Tree menggunakan Linked list sebagai berikut di dalam file "bstree.h"
+> <img width="571" height="172" alt="image" src="https://github.com/user-attachments/assets/d9690f12-297d-4e13-b1a4-6e00419a90db" />
 
-stack.h
+Buatlah implementasi ADT Binary Search Tree pada file "bstree.cpp" dan cobalah hasil implementasi ADT pada file "main.cpp"
+> <img width="671" height="333" alt="image" src="https://github.com/user-attachments/assets/7794432a-bcd4-49f7-8817-043319b6da02" />
+
+Output:
+> <img width="507" height="138" alt="image" src="https://github.com/user-attachments/assets/a93daa82-2531-4440-887c-476adc0d0029" />
+
+bstree.h
 ```h
 #ifndef STACK_H
 #define STACK_H
