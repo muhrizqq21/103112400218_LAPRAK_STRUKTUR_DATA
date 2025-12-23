@@ -3,7 +3,7 @@
 
 ## Dasar Teori
 
-Tree ialah struktur informasi non-linear yang ditafsirkan sebagai graf tidak berarah tersambung tanpa sirkuit, mempunyai satu simpul bawah yang disebut root, serta simpul yang lain saling berhubungan dalam hierarki parent serta child. Struktur ini kerap dikelola memakai fungsi rekursif, ialah sub program yang memanggil dirinya sendiri, spesialnya pada tipe Binary Tree yang menghalangi tiap node hanya boleh mempunyai maksimum 2 anak. Salah satu wujud pelaksanaannya merupakan Binary Search Tree (BST), yang mengendalikan penempatan informasi secara terurut di mana left child wajib lebih kecil serta right child lebih besar dari parent-nya, dan bisa ditelusuri memakai tata cara traversal semacam Pre-order, In-order, serta Post-order.
+Graph merupakan sebuah struktur data yang terdiri dari himpunan tidak kosong dari node atau vertex serta garis penghubung yang disebut sebagai edge. Berdasarkan karakteristik hubungannya, graph dapat dibedakan menjadi graph berarah (directed graph) di mana tiap edge memiliki arah tertentu, serta graph tidak berarah (undirected graph). Dalam implementasi pemrograman, graph dapat direpresentasikan melalui matriks ketetanggaan menggunakan array 2 dimensi atau multi linked list yang memiliki keunggulan dalam pengelolaan data secara dinamis. Selain itu, terdapat metode penelusuran graph seperti Breadth First Search (BFS) yang mengunjungi node per level menggunakan queue dan Depth First Search (DFS) yang mengunjungi subtree secara rekursif menggunakan stack, serta konsep topological sort untuk menghasilkan urutan linear dari elemen yang memiliki keterurutan parsial.
 
 ## Guided
 
