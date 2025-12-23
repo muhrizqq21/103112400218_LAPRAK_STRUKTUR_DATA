@@ -3,7 +3,7 @@
 
 ## Dasar Teori
 
-Tree ialah struktur informasi non-linear yang ditafsirkan sebagai graf tidak berarah tersambung tanpa sirkuit, mempunyai satu simpul bawah yang disebut root, serta simpul yang lain saling berhubungan dalam hierarki parent serta child. Struktur ini kerap dikelola memakai fungsi rekursif, ialah sub program yang memanggil dirinya sendiri, spesialnya pada tipe Binary Tree yang menghalangi tiap node hanya boleh mempunyai maksimum 2 anak. Salah satu wujud pelaksanaannya merupakan Binary Search Tree (BST), yang mengendalikan penempatan informasi secara terurut di mana left child wajib lebih kecil serta right child lebih besar dari parent-nya, dan bisa ditelusuri memakai tata cara traversal semacam Pre-order, In-order, serta Post-order.
+Multi Linked List merupakan struktur data yang terdiri dari sekumpulan list berbeda yang saling terhubung, di mana setiap elemen di dalamnya dapat membentuk list sendiri yang umumnya terbagi ke dalam hierarki list induk dan list anak. Dalam struktur ini, list induk berfungsi sebagai penunjuk bagi list anak yang terkait dengannya. Oleh karena itu, setiap operasi penambahan (insert) maupun penghapusan (delete) pada elemen anak wajib mengetahui posisi elemen induknya terlebih dahulu. Secara teknis, pengelolaan data ini menggunakan representasi pointer (address) untuk mengacu pada elemen tertentu, serta melibatkan manajemen memori berupa alokasi untuk pembuatan elemen baru dan dealokasi untuk mengembalikan memori ke sistem, terutama saat penghapusan elemen induk yang mengharuskan seluruh elemen anak di bawahnya ikut dihapus.
 
 ## Guided
 
@@ -11,206 +11,128 @@ Tree ialah struktur informasi non-linear yang ditafsirkan sebagai graf tidak ber
 
 ```cpp
 #include <iostream>
+#include <string>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *kiri, *kanan;
+struct ChildNode
+{
+    string info;
+    ChildNode *next;
 };
 
-Node *buatNode(int nilai) 
+struct ParentNode
 {
-    Node *baru = new Node();
-    baru->data = nilai;
-    baru->kiri = baru->kanan = NULL;
-    return baru;
-}
-//insert (sisip data ke dalam tree)
-Node *insert(Node *root, int nilai) 
-{
-    if (root == NULL) 
-        return buatNode(nilai);
-    if (nilai < root->data) 
-        root->kiri = insert(root->kiri, nilai);
-    else if (nilai > root->data) 
-        root->kanan = insert(root->kanan, nilai);
+    string info;
+    ChildNode *childHead;
+    ParentNode *next;
+};
 
-    return root;
+ParentNode *createParent(string info)
+{
+    ParentNode *newNode = new ParentNode;
+    newNode->info = info;
+    newNode->childHead = NULL;
+    newNode->next = NULL;
+    return newNode;
 }
 
-//search (mencari data dalam tree)
-
-Node *search(Node *root, int nilai) 
+ChildNode *createChild(string info)
 {
-    if (root == NULL || root->data == nilai)
-        return root;
-    if (nilai < root->data)
-        return search(root->kiri, nilai); //cari di subtree kiri
-    return search(root->kanan, nilai); //cari di subtree kanan
+    ChildNode *newNode = new ChildNode;
+    newNode->info = info;
+    newNode->next = NULL;
+    return newNode;
 }
 
-//Helper cari nilai minimum dalam tree
-Node *nilaiTerkecil(Node *node) 
+void insertParent(ParentNode *&head, string info)
 {
-    Node *current = node;
-    while (current && current->kiri != NULL)
-        current = current->kiri;
-    return current;
-}
-
-//delete (menghapus data dari tree) -- untuk update data
-Node *hapus(Node *root, int nilai) 
-{
-    if (root == NULL)
-        return root;
-
-    if (nilai < root->data)
-        root->kiri = hapus(root->kiri, nilai);
-    else if (nilai > root->data)
-        root->kanan = hapus(root->kanan, nilai);
-    else {
-        // jika data ditemukan
-        if (root->kiri == NULL) {
-            Node *temp = root->kanan;
-            delete root;
-            return temp;
-        } else if (root->kanan == NULL) {
-            Node *temp = root->kiri;
-            delete root;
-            return temp;
+    ParentNode *newNode = createParent(info);
+    if (head == NULL)
+    {
+        head = newNode;
+    }
+    else
+    {
+        ParentNode *temp = head;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
         }
-
-        // Node dengan dua anak: dapatkan inorder successor (nilai terkecil di subtree kanan)
-        Node *temp = nilaiTerkecil(root->kanan);
-        root->data = temp->data; 
-        root->kanan = hapus(root->kanan, temp->data); 
+        temp->next = newNode;
     }
-    return root;
 }
 
-//update (mengubah data dalam tree)
-Node *update(Node *root, int lama, int baru) 
+void insertChild(ParentNode *head, string parentInfo, string childInfo)
 {
-
-    if (search(root, lama) != NULL) 
+    ParentNode *p = head;
+    while (p != NULL && p->info != parentInfo)
     {
-        root = hapus(root, lama);
-        root = insert(root, baru);
-        cout << "data" << lama << "berhasil diupdate menjadi" << baru << endl;
-    } else {
-    cout << "data" << lama << "tidak ditemukan!" << endl;
+        p = p->next;
     }
-    return root;
+
+    if (p != NULL)
+    {
+        ChildNode *newChild = createChild(childInfo);
+        if (p->childHead == NULL)
+        {
+            p->childHead = newChild;
+        }
+        else
+        {
+            ChildNode *c = p->childHead;
+            while (c->next != NULL)
+            {
+                c = c->next;
+            }
+            c->next = newChild;
+        }
+    }
 }
 
-// traversal preorder
-void preOrder(Node *root) 
+void printAll(ParentNode *head)
 {
-    if (root != NULL) 
+    ParentNode *p = head;
+    while (p != NULL)
     {
-        cout << root->data << " ";
-        preOrder(root->kiri);
-        preOrder(root->kanan);
+        cout << p->info;
+        ChildNode *c = p->childHead;
+        if (c != NULL)
+        {
+            while (c != NULL)
+            {
+                cout << " -> " << c->info;
+                c = c->next;
+            }
+        }
+        cout << endl;
+        p = p->next;
     }
 }
 
-// traversal inorder
-void inOrder(Node *root) 
+int main()
 {
-    if (root != NULL) 
-    {
-        inOrder(root->kiri);
-        cout << root->data << " ";
-        inOrder(root->kanan);
-    }
-}
-
-// traversal postorder
-void postOrder(Node *root) 
-{ //kiri kanan akar
-    if (root != NULL) 
-    {
-        postOrder(root->kiri);
-        postOrder(root->kanan);
-        cout << root->data << " ";
-    }
-}
-
-int main ()
-{
-    Node *root = NULL;
+    ParentNode *list = NULL;
     
-    cout << "=== 1. INSERT DATA ===" << endl;
-    root = insert (root, 10);
-    root = insert (root, 5);
-    root = insert (root, 20);
-    root = insert (root, 3);
-    root = insert (root, 7);
-    root = insert (root, 15);
-    root = insert (root, 25);
-    cout << "Data berhasil dimasukkan. \n" 
-        << endl;
-    
-    cout << "=== 2. TAMPILKAN TREE (TRAVERSAL) ===" << endl;
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
+    insertParent(list, "Parent Node 1");
+    insertParent(list, "Parent Node 2");
 
-    cout << "=== 3. TEST SEARCH ===" << endl;
-    int cari1 = 7, cari2 = 90;
-    cout << "Cari" << cari1 << ": " << (search(root, cari1) ? "Ketemu" : "Tidak Ketemu") << endl;
-    cout << "Cari" << cari2 << ": " << (search(root, cari2) ? "Ketemu" : "Tidak Ketemu") << endl;
-    cout << endl;
+    printAll(list);
+    cout << "\n";
 
-    cout << "=== 4. TEST UPDATE ===" << endl;
-    //mengubah 5 menjadi 8
-    root = update (root, 5, 8);
-    cout << "Hasil InOrder setelah update: ";
-    cout << endl;
-    cout << endl;
+    insertChild(list, "Parent Node 1", "Child Node A");
+    insertChild(list, "Parent Node 1", "Child Node B");
+    insertChild(list, "Parent Node 2", "Child Node C");
 
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
-
-    cout << "=== 5. TEST DELETE ===" << endl;
-    //menghapus 20 (Node  yang memiliki dua anak)
-    cout << "Menghapus angka 20..." << endl;
-    root = hapus (root, 20);
-
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
+    printAll(list);
 
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1be2ca92-d741-442a-8265-4d258d7c0a94" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/48f3ac4e-2e20-41eb-add8-c05327e7e917" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program di atas mengimplementasikan struktur data Binary Search Tree (BST) yang memfasilitasi operasi insert, search, update, serta delete memakai manipulasi pointer dinamis. Program mempraktikkan logika spesial pada fungsi update dengan metode menghapus data lama kemudian menyisipkan yang baru demi melindungi urutan, dan fungsi delete yang mampu menangani penghapusan node kompleks memakai metode inorder successor. Semua operasi tersebut divisualisasikan lewat 3 tata cara traversal (PreOrder, InOrder, PostOrder) yang diuji secara berentetan dalam fungsi utama buat memverifikasi struktur tree. </p>
+<p> Program di atas merupakan implementasi dari struktur data Multi Linked List yang menghubungkan dua jenis list berbeda, yaitu list induk (ParentNode) dan list anak (ChildNode). Dalam kode ini, setiap elemen induk memiliki sebuah pointer (childHead) yang menunjuk ke awal dari list anak yang terkait dengannya, sehingga satu induk dapat memiliki sekumpulan data anak yang spesifik. Program tersebut menyediakan fungsionalitas untuk melakukan alokasi memori node baru, menyisipkan elemen induk, serta menyisipkan elemen anak dengan cara mencari posisi induknya terlebih dahulu sebelum meletakkan data anak di akhir list tersebut. Hasil akhirnya adalah sebuah struktur hierarkis yang dapat ditelusuri untuk menampilkan hubungan antara setiap induk dan daftar anak-anaknya. </p>
 
 ## Unguided
 
