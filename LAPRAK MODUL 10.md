@@ -227,429 +227,421 @@ Output:
 
 bstree.h
 ```h
-#ifndef STACK_H
-#define STACK_H
+#ifndef BSTREE_H
+#define BSTREE_H
 
 #include <iostream>
 using namespace std;
 
 typedef int infotype;
+typedef struct Node *address;
 
-struct Stack {
-    infotype info[20];
-    int top;
+#define Nil NULL
+
+struct Node {
+    infotype info;
+    address left;
+    address right;
 };
 
-void CreateStack(Stack &S);
-
-void push(Stack &S, infotype x);
-
-infotype pop(Stack &S);
-
-void printInfo(Stack S);
-
-void balikStack(Stack &S);
+address alokasi(infotype x);
+void insertNode(address &root, infotype x);
+address findNode(infotype x, address root);
+void printInorder(address root);
 
 #endif
 ```
 
-stack.cpp
+bstree.cpp
 ```cpp
-#include "stack.h"
+#include "bstree.h"
 
-void CreateStack(Stack &S) {
-    S.top = -1;
-}
-
-void push(Stack &S, infotype x) {
-    if (S.top < 19) {
-        S.top++;
-        S.info[S.top] = x;
-    } else {
-        cout << "Stack penuh!" << endl;
+address alokasi(infotype x) {
+    address P = new Node;
+    if (P != Nil) {
+        P->info = x;
+        P->left = Nil;
+        P->right = Nil;
     }
+    return P;
 }
 
-infotype pop(Stack &S) {
-    if (S.top != -1) {
-        infotype x = S.info[S.top];
-        S.top--;
-        return x;
+void insertNode(address &root, infotype x) {
+    if (root == Nil) {
+        root = alokasi(x);
     } else {
-        cout << "Stack kosong!" << endl;
-        return -1;
-    }
-}
-
-void printInfo(Stack S) {
-    cout << "[TOP] ";
-    if (S.top != -1) {
-        for (int i = S.top; i >= 0; i--) {
-            cout << S.info[i] << " ";
+        if (x < root->info) {
+            insertNode(root->left, x);
+        } else if (x > root->info) {
+            insertNode(root->right, x);
         }
     }
-    cout << endl;
 }
 
-void balikStack(Stack &S) {
-    Stack tempStack, tempStack2;
-    CreateStack(tempStack);
-    CreateStack(tempStack2);
-
-    while (S.top != -1) {
-        push(tempStack, pop(S));
+address findNode(infotype x, address root) {
+    if (root == Nil || root->info == x) {
+        return root;
     }
-
-    while (tempStack.top != -1) {
-        push(tempStack2, pop(tempStack));
+    if (x < root->info) {
+        return findNode(x, root->left);
+    } else {
+        return findNode(x, root->right);
     }
+}
 
-    while (tempStack2.top != -1) {
-        push(S, pop(tempStack2));
+void printInorder(address root) {
+    if (root != Nil) {
+        printInorder(root->left);
+        cout << root->info << " - ";
+        printInorder(root->right);
     }
 }
 ```
 
 main.cpp
 ```cpp
-#include <iostream>
-#include "stack.h"
-
-using namespace std;
+#include "bstree.h"
 
 int main() {
-    cout << "Hello World!!" << endl;
-    Stack S;
-    CreateStack(S);
-    push(S, 3);
-    push(S, 4);
-    push(S, 8);
-    pop(S);
-    push(S, 2);
-    push(S, 3);
-    pop(S);
-    push(S, 9);
-    printInfo(S);
-    cout << "balik stack" << endl;
-    balikStack(S);
-    printInfo(S);
+    address root = Nil;
+    
+    cout << "Hello World" << endl;
+    
+    insertNode(root, 1);
+    insertNode(root, 2);
+    insertNode(root, 6);
+    insertNode(root, 4);
+    insertNode(root, 5);
+    insertNode(root, 3);
+    insertNode(root, 6);
+    insertNode(root, 7);
+    printInorder(root);
+    cout << endl;
+    
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f6ddc49c-e5e8-480f-91c1-e19829a32018" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f97abbe3-f9dd-41d3-84e8-a526b22e7ad7" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program pada Latihan 1 ini bertujuan buat mengimplementasikan ADT (Abstract Data Type) Stack memakai representasi tabel, ialah array. Struktur informasi Stack ini didefinisikan buat menaruh infotype integer, dengan kapasitas array info sebanyak 20 elemen serta suatu variabel top buat menandai posisi elemen paling atas. Program ini mengimplementasikan fungsi-fungsi bawah stack semacam CreateStack (inisialisasi stack), push (menambah elemen), pop (mengambil elemen), serta printInfo (mencetak isi stack). Sebagai tambahan, program ini pula membuat prosedur balikStack yang berperan buat membalik urutan seluruh elemen di dalam stack. Program utama (main.cpp) setelah itu digunakan buat menguji fungsionalitas ADT ini dengan melaksanakan serangkaian pembedahan push serta pop, mencetak hasilnya, memanggil balikStack, serta mencetak kembali isi stack yang sudah terbalik. </p>
+<p> Program di atas adalah program yang mengimplementasikan struktur data non-linear berupa Binary Search Tree (BST) menggunakan representasi linked list dan prinsip rekursif untuk mengelola penyimpanan data secara efisien. Melalui prosedur insertNode, program secara otomatis menyusun elemen dengan aturan nilai yang lebih kecil dari parent ditempatkan pada left subtree, sedangkan nilai yang lebih besar ditempatkan pada right subtree. Selain manajemen memori melalui fungsi alokasi, program ini menerapkan metode In-order traversal untuk menelusuri dan menampilkan seluruh data secara terurut, yang membuktikan bahwa logika rekursif sangat efektif untuk menyelesaikan permasalahan dengan pola langkah yang teratur. </p>
 
 ### Soal 2
 
-Tambahkan prosedur pushAscending( in/out S : Stack, in x : integer)
-```
-int main()
-{
-Gambar 7-11 Output stack
-STRUKTUR DATA 65
-cout << "Hello world!" << endl;
-Stack S;
-createStack(S);
-pushAscending(S,3);
-pushAscending(S,4);
-pushAscending(S,8);
-pushAscending(S,2);
-pushAscending(S,3);
-pushAscending(S,9);
-printInfo(S);
-cout<<"balik stack"<<endl;
-balikStack(S);
-printInfo(S);
-return 0;
-}
-```
-<p> Contoh Output: </p>
-<img width="241" height="114" alt="image" src="https://github.com/user-attachments/assets/53051f33-2c4c-446d-a0e0-d1a442db121f" />
+Buatlah fungsi untuk menghitung jumlah node dengan fungsi berikut.
 
-stack.h
+➢ fungsi hitungJumlahNode( root:address ) : integer
+
+/* fungsi mengembalikan integer banyak node yang ada di dalam BST*/
+
+➢ fungsi hitungTotalInfo( root:address, start:integer ) : integer
+
+/* fungsi mengembalikan jumlah (total) info dari node-node yang ada di dalam BST*/
+
+➢ fungsi hitungKedalaman( root:address, start:integer ) : integer
+
+/* fungsi rekursif mengembalikan integer kedalaman maksimal dari binary tree */
+> <img width="673" height="480" alt="image" src="https://github.com/user-attachments/assets/8db7c935-d07a-4ecc-8c0a-a7a53a441df2" />
+
+bstree.h
 ```h
-#ifndef STACK_H
-#define STACK_H
+#ifndef BSTREE_H
+#define BSTREE_H
 
 #include <iostream>
 using namespace std;
 
 typedef int infotype;
+typedef struct Node *address;
 
-struct Stack {
-    infotype info[20];
-    int top;
+#define Nil NULL
+
+struct Node {
+    infotype info;
+    address left;
+    address right;
 };
 
-void CreateStack(Stack &S);
+address alokasi(infotype x);
+void insertNode(address &root, infotype x);
+address findNode(infotype x, address root);
+void printInorder(address root);
 
-void push(Stack &S, infotype x);
-
-infotype pop(Stack &S);
-
-void printInfo(Stack S);
-
-void balikStack(Stack &S);
-
-void pushAscending(Stack &S, infotype x);
+int hitungJumlahNode(address root);
+int hitungTotalInfo(address root);
+int hitungKedalaman(address root, int start);
 
 #endif
 ```
 
-stack.cpp
+bstree.cpp
 ```cpp
-#include "stack.h"
+#include "bstree.h"
 
-void CreateStack(Stack &S) {
-    S.top = -1;
-}
-
-void push(Stack &S, infotype x) {
-    if (S.top < 19) {
-        S.top++;
-        S.info[S.top] = x;
-    } else {
-        cout << "Stack penuh!" << endl;
+address alokasi(infotype x) {
+    address P = new Node;
+    if (P != Nil) {
+        P->info = x;
+        P->left = Nil;
+        P->right = Nil;
     }
+    return P;
 }
 
-infotype pop(Stack &S) {
-    if (S.top != -1) {
-        infotype x = S.info[S.top];
-        S.top--;
-        return x;
+void insertNode(address &root, infotype x) {
+    if (root == Nil) {
+        root = alokasi(x);
     } else {
-        cout << "Stack kosong!" << endl;
-        return -1;
-    }
-}
-
-void printInfo(Stack S) {
-    cout << "[TOP] ";
-    if (S.top != -1) {
-        for (int i = S.top; i >= 0; i--) {
-            cout << S.info[i] << " ";
+        if (x < root->info) {
+            insertNode(root->left, x);
+        } else if (x > root->info) {
+            insertNode(root->right, x);
         }
     }
-    cout << endl;
 }
 
-void balikStack(Stack &S) {
-    Stack tempStack, tempStack2;
-    CreateStack(tempStack);
-    CreateStack(tempStack2);
-
-    while (S.top != -1) {
-        push(tempStack, pop(S));
+address findNode(infotype x, address root) {
+    if (root == Nil || root->info == x) {
+        return root;
     }
-
-    while (tempStack.top != -1) {
-        push(tempStack2, pop(tempStack));
-    }
-
-    while (tempStack2.top != -1) {
-        push(S, pop(tempStack2));
+    if (x < root->info) {
+        return findNode(x, root->left);
+    } else {
+        return findNode(x, root->right);
     }
 }
 
-void pushAscending(Stack &S, infotype x) {
-    Stack tempStack;
-    CreateStack(tempStack);
-
-    while (S.top != -1 && S.info[S.top] > x) {
-        push(tempStack, pop(S));
+void printInorder(address root) {
+    if (root != Nil) {
+        printInorder(root->left);
+        cout << root->info << " - ";
+        printInorder(root->right);
     }
+}
 
-    push(S, x);
+int hitungJumlahNode(address root) {
+    if (root == Nil) {
+        return 0;
+    } else {
+        return 1 + hitungJumlahNode(root->left) + hitungJumlahNode(root->right);
+    }
+}
 
-    while (tempStack.top != -1) {
-        push(S, pop(tempStack));
+int hitungTotalInfo(address root) {
+    if (root == Nil) {
+        return 0;
+    } else {
+        return root->info + hitungTotalInfo(root->left) + hitungTotalInfo(root->right);
+    }
+}
+
+int hitungKedalaman(address root, int start) {
+    if (root == Nil) {
+        return start;
+    } else {
+        int kiri = hitungKedalaman(root->left, start + 1);
+        int kanan = hitungKedalaman(root->right, start + 1);
+        return (kiri > kanan) ? kiri : kanan;
     }
 }
 ```
 
 main.cpp
 ```cpp
-#include <iostream>
-#include "stack.h"
-
-using namespace std;
+#include "bstree.h"
 
 int main() {
-    cout << "Hello World!!" << endl;
-    Stack S;
-    CreateStack(S);
-    pushAscending(S, 3);
-    pushAscending(S, 4);
-    pushAscending(S, 8);
-    pushAscending(S, 2);
-    pushAscending(S, 3);
-    pushAscending(S, 9);
-    printInfo(S);
-    cout << "balik stack" << endl;
-    balikStack(S);
-    printInfo(S);
+    address root = Nil;
+    
+    cout << "Hello World" << endl;
+    
+    insertNode(root, 1);
+    insertNode(root, 2);
+    insertNode(root, 6);
+    insertNode(root, 4);
+    insertNode(root, 5);
+    insertNode(root, 3);
+    insertNode(root, 6);
+    insertNode(root, 7);
+    printInorder(root);
+    cout << "\n";
+    cout << "kedalaman   : " << hitungKedalaman(root, 0) << endl;
+    cout << "jumlah Node : " << hitungJumlahNode(root) << endl;
+    cout << "total       : " << hitungTotalInfo(root) << endl;
+
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/65709b85-70cb-4d49-81a7-3d5fb4d3251e" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5ad8c856-f28d-4ba4-b69a-c6dfff53b28d" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program pada Latihan 2 ini ialah pengembangan dari Latihan 1 dengan meningkatkan satu prosedur baru, ialah pushAscending (in/out S: Stack, in x: integer). Prosedur ini mempunyai fungsi spesial, alih-alih cuma menambahkan elemen baru (x) di posisi Top, prosedur ini hendak menyisipkan x ke dalam stack sedemikian rupa sehingga urutan data di dalam stack senantiasa terpelihara secara ascending (terurut membesar) dari dasar stack mengarah ke Top. Program utama (main.cpp) setelah itu dimodifikasi buat memanggil pushAscending secara berurutan, mengambil alih pemanggilan push biasa, buat mendemonstrasikan kalau elemen-elemen (semacam 9, 8, 4, 3, 3, 2) tersimpan secara terurut di dalam stack. </p>
+<p> Program di atas menggunakan fungsi rekursif untuk menghitung statistik pada Binary Search Tree, yang meliputi perhitungan jumlah seluruh node , total akumulasi nilai informasi yang tersimpan dalam pohon , serta penentuan kedalaman atau tinggi maksimal dari struktur tree tersebut. Pendekatan ini memanfaatkan prinsip rekursif untuk menyederhanakan pemrosesan data non-linear dengan cara memanggil sub-program itu sendiri hingga mencapai kondisi khusus atau terminal. </p>
 
 ### Soal 3
 
-Tambahkan prosedur getInputStream( in/out S : Stack ). Prosedur akan terus membaca dan
-menerima input user dan memasukkan setiap input ke dalam stack hingga user menekan
-tombol enter. Contoh: gunakan cin.get() untuk mendapatkan inputan user.
-<img width="629" height="250" alt="image" src="https://github.com/user-attachments/assets/877496ac-8046-4284-98e3-12b1ee12d09c" />
+Print tree secara pre-order dan post-order.
 
-stack.h
+<img width="375" height="296" alt="image" src="https://github.com/user-attachments/assets/2a7a3483-a9b9-491d-be72-5655ce1b700c" />
+
+bstree.h
 ```h
-#ifndef STACK_H
-#define STACK_H
+#ifndef BSTREE_H
+#define BSTREE_H
 
 #include <iostream>
 using namespace std;
 
 typedef int infotype;
+typedef struct Node *address;
 
-struct Stack {
-    infotype info[20];
-    int top;
+#define Nil NULL
+
+struct Node {
+    infotype info;
+    address left;
+    address right;
 };
 
-void CreateStack(Stack &S);
+address alokasi(infotype x);
+void insertNode(address &root, infotype x);
+address findNode(infotype x, address root);
+void printInorder(address root);
 
-void push(Stack &S, infotype x);
+int hitungJumlahNode(address root);
+int hitungTotalInfo(address root);
+int hitungKedalaman(address root, int start);
 
-infotype pop(Stack &S);
-
-void printInfo(Stack S);
-
-void balikStack(Stack &S);
-
-void pushAscending(Stack &S, infotype x);
-
-void getInputStream(Stack &S);
+void PreOrder(address root);
+void PostOrder(address root);
 
 #endif
 ```
 
-stack.cpp
+bstree.cpp
 ```cpp
-#include "stack.h"
-#include <cctype>
+#include "bstree.h"
 
-void CreateStack(Stack &S) {
-    S.top = -1;
-}
-
-void push(Stack &S, infotype x) {
-    if (S.top < 19) {
-        S.top++;
-        S.info[S.top] = x;
-    } else {
-        cout << "Stack penuh!" << endl;
+address alokasi(infotype x) {
+    address P = new Node;
+    if (P != Nil) {
+        P->info = x;
+        P->left = Nil;
+        P->right = Nil;
     }
+    return P;
 }
 
-infotype pop(Stack &S) {
-    if (S.top != -1) {
-        infotype x = S.info[S.top];
-        S.top--;
-        return x;
+void insertNode(address &root, infotype x) {
+    if (root == Nil) {
+        root = alokasi(x);
     } else {
-        cout << "Stack kosong!" << endl;
-        return -1;
-    }
-}
-
-void printInfo(Stack S) {
-    cout << "[TOP] ";
-    if (S.top != -1) {
-        for (int i = S.top; i >= 0; i--) {
-            cout << S.info[i] << " ";
+        if (x < root->info) {
+            insertNode(root->left, x);
+        } else if (x > root->info) {
+            insertNode(root->right, x);
         }
     }
-    cout << endl;
 }
 
-void balikStack(Stack &S) {
-    Stack tempStack, tempStack2;
-    CreateStack(tempStack);
-    CreateStack(tempStack2);
-
-    while (S.top != -1) {
-        push(tempStack, pop(S));
+address findNode(infotype x, address root) {
+    if (root == Nil || root->info == x) {
+        return root;
     }
-
-    while (tempStack.top != -1) {
-        push(tempStack2, pop(tempStack));
-    }
-
-    while (tempStack2.top != -1) {
-        push(S, pop(tempStack2));
+    if (x < root->info) {
+        return findNode(x, root->left);
+    } else {
+        return findNode(x, root->right);
     }
 }
 
-void pushAscending(Stack &S, infotype x) {
-    Stack tempStack;
-    CreateStack(tempStack);
-
-    while (S.top != -1 && S.info[S.top] > x) {
-        push(tempStack, pop(S));
-    }
-
-    push(S, x);
-
-    while (tempStack.top != -1) {
-        push(S, pop(tempStack));
+void printInorder(address root) {
+    if (root != Nil) {
+        printInorder(root->left);
+        cout << root->info << " - ";
+        printInorder(root->right);
     }
 }
 
-void getInputStream(Stack &S) {
-    char c;
-    
-    while ((c = std::cin.get()) != '\n') {
-        if (isdigit(c)) {
-            infotype x = c - '0';
-            push(S, x);
-        }
+int hitungJumlahNode(address root) {
+    if (root == Nil) {
+        return 0;
+    } else {
+        return 1 + hitungJumlahNode(root->left) + hitungJumlahNode(root->right);
+    }
+}
+
+int hitungTotalInfo(address root) {
+    if (root == Nil) {
+        return 0;
+    } else {
+        return root->info + hitungTotalInfo(root->left) + hitungTotalInfo(root->right);
+    }
+}
+
+int hitungKedalaman(address root, int start) {
+    if (root == Nil) {
+        return start;
+    } else {
+        int kiri = hitungKedalaman(root->left, start + 1);
+        int kanan = hitungKedalaman(root->right, start + 1);
+        return (kiri > kanan) ? kiri : kanan;
+    }
+}
+
+void PreOrder(address root) {
+    if (root != Nil) {
+        cout << root->info << " - ";
+        PreOrder(root->left);
+        PreOrder(root->right);
+    }
+}
+
+void PostOrder(address root) {
+    if (root != Nil) {
+        PostOrder(root->left);
+        PostOrder(root->right);
+        cout << root->info << " - ";
     }
 }
 ```
 
 main.cpp
 ```cpp
-#include <iostream>
-#include "stack.h"
-
-using namespace std;
+#include "bstree.h"
 
 int main() {
-    cout << "Hello World!!" << endl;
-    Stack S;
-    CreateStack(S);
+    address root = Nil;
+    
+    cout << "Hello World" << endl;
+    
+    insertNode(root, 1);
+    insertNode(root, 2);
+    insertNode(root, 6);
+    insertNode(root, 4);
+    insertNode(root, 5);
+    insertNode(root, 3);
+    insertNode(root, 6);
+    insertNode(root, 7);
+    printInorder(root);
+    cout << "\n";
+    cout << "kedalaman   : " << hitungKedalaman(root, 0) << endl;
+    cout << "jumlah Node : " << hitungJumlahNode(root) << endl;
+    cout << "total       : " << hitungTotalInfo(root) << endl;
+    cout << "\nPreOrder  : ";
+    PreOrder(root);
+    cout << "\nPostOrder : ";
+    PostOrder(root);
 
-    getInputStream(S);
-
-    printInfo(S);
-    cout << "balik stack" << endl;
-    balikStack(S);
-    printInfo(S);
     return 0;
 }
 ```
 > Output Program
-> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/0d176e60-47f0-42a0-940a-f4ff2affc937" />
+> <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/c4fd4178-c6d2-4f48-9112-681c84fc0589" />
 
 <p> <strong> Deskripsi Program </strong> </p>
-<p> Program pada Latihan 3 ini akan memperkenalkan prosedur baru bernama getInputStream (in/out S: Stack). Fungsi dari prosedur ini adalah untuk secara kontinu membaca input yang dimasukkan oleh pengguna serta memasukkan tiap input tersebut ke dalam stack. Proses push input ke stack ini akan terus berlangsung sampai pengguna memencet tombol Enter, yang menunjukkan akhir dari input. Program utama (main.cpp) diganti buat memanggil getInputStream(S) selaku metode buat mengisi stack, mengambil alih pemanggilan push manual ataupun pushAscending dari latihan sebelumnya. </p>
+<p> Program ini mengimplementasikan struktur data non-linear Binary Search Tree (BST) berbasis linked list dengan memanfaatkan prinsip rekursif untuk menyederhanakan penyelesaian masalah yang memiliki langkah-langkah terpola. Secara dinamis, sistem mengatur penempatan simpul dengan aturan nilai lebih kecil dari induknya ditempatkan di sub-pohon kiri dan nilai yang lebih besar di sub-pohon kanan. Selain manajemen penyisipan, program ini mampu menganalisis karakteristik pohon melalui perhitungan jumlah simpul, akumulasi total nilai informasi, serta kedalaman maksimal, dan menyediakan metode penelusuran Pre-order, In-order, dan Post-order untuk mengakses seluruh data secara sistematis. </p>
 
 ## Referensi
 
