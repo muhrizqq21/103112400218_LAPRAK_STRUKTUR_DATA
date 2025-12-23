@@ -9,200 +9,246 @@ Graph merupakan sebuah struktur data yang terdiri dari himpunan tidak kosong dar
 
 ### Contoh 1
 
-```cpp
+graf.h
+```h
+#ifndef GRAF_H_INCLUDED
+#define GRAF_H_INCLUDED
+
 #include <iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *kiri, *kanan;
+typedef char infoGraph;
+
+struct ElmNode;
+struct ElmEdge;
+
+typedef ElmNode *adrNode;
+typedef ElmEdge *adrEdge;
+
+struct ElmNode
+{
+    infoGraph info;
+    int visited;
+    adrEdge firstEdge;
+    adrNode next;
 };
 
-Node *buatNode(int nilai) 
+struct ElmEdge
 {
-    Node *baru = new Node();
-    baru->data = nilai;
-    baru->kiri = baru->kanan = NULL;
-    return baru;
+    adrNode node;
+    adrEdge next;
+};
+
+struct Graph
+{
+    adrNode first;
+};
+
+// PRIMITIF GRAPH
+void CreateGraph(Graph &G);
+adrNode AllocateNode(infoGraph X);
+adrEdge AllocateEdge(adrNode N);
+
+void InsertNode(Graph &G, infoGraph X);
+adrNode FindNode(Graph G, infoGraph X);
+
+void ConnectNode(Graph &G, infoGraph A, infoGraph B);
+
+void PrintInfoGraph(Graph G);
+
+// Traversal
+void ResetVisited(Graph &G);
+void PrintDFS(Graph &G, adrNode N);
+void PrintBFS(Graph &G, adrNode N);
+
+#endif
+```
+
+graf.cpp
+```h
+#include "graf.h"
+#include <queue>
+#include <stack>
+
+void CreateGraph(Graph &G)
+{
+    G.first = NULL;
 }
-//insert (sisip data ke dalam tree)
-Node *insert(Node *root, int nilai) 
-{
-    if (root == NULL) 
-        return buatNode(nilai);
-    if (nilai < root->data) 
-        root->kiri = insert(root->kiri, nilai);
-    else if (nilai > root->data) 
-        root->kanan = insert(root->kanan, nilai);
 
-    return root;
+adrNode AllocateNode(infoGraph X)
+{
+    adrNode P = new ElmNode;
+    P->info = X;
+    P->visited = 0;
+    P->firstEdge = NULL;
+    P->next = NULL;
+    return P;
 }
 
-//search (mencari data dalam tree)
-
-Node *search(Node *root, int nilai) 
+adrEdge AllocateEdge(adrNode N)
 {
-    if (root == NULL || root->data == nilai)
-        return root;
-    if (nilai < root->data)
-        return search(root->kiri, nilai); //cari di subtree kiri
-    return search(root->kanan, nilai); //cari di subtree kanan
+    adrEdge P = new ElmEdge;
+    P->node = N;
+    P->next = NULL;
+    return P;
 }
 
-//Helper cari nilai minimum dalam tree
-Node *nilaiTerkecil(Node *node) 
+void InsertNode(Graph &G, infoGraph X)
 {
-    Node *current = node;
-    while (current && current->kiri != NULL)
-        current = current->kiri;
-    return current;
+    adrNode P = AllocateNode(X);
+    P->next = G.first;
+    G.first = P;
 }
 
-//delete (menghapus data dari tree) -- untuk update data
-Node *hapus(Node *root, int nilai) 
+adrNode FindNode(Graph G, infoGraph X)
 {
-    if (root == NULL)
-        return root;
+    adrNode P = G.first;
+    while (P != NULL)
+    {
+        if (P->info == X)
+            return P;
+        P = P->next;
+    }
+    return NULL;
+}
 
-    if (nilai < root->data)
-        root->kiri = hapus(root->kiri, nilai);
-    else if (nilai > root->data)
-        root->kanan = hapus(root->kanan, nilai);
-    else {
-        // jika data ditemukan
-        if (root->kiri == NULL) {
-            Node *temp = root->kanan;
-            delete root;
-            return temp;
-        } else if (root->kanan == NULL) {
-            Node *temp = root->kiri;
-            delete root;
-            return temp;
+void ConnectNode(Graph &G, infoGraph A, infoGraph B)
+{
+    adrNode N1 = FindNode(G, A);
+    adrNode N2 = FindNode(G, B);
+
+    if (N1 == NULL || N2 == NULL)
+    {
+        cout << "Node tidak ditemukan!\n";
+        return;
+    }
+
+    // Buat edge dari N1 ke N2
+    adrEdge E1 = AllocateEdge(N2);
+    E1->next = N1->firstEdge;
+    N1->firstEdge = E1;
+
+    // Karena undirected → buat edge balik
+    adrEdge E2 = AllocateEdge(N1);
+    E2->next = N2->firstEdge;
+    N2->firstEdge = E2;
+}
+
+void PrintInfoGraph(Graph G)
+{
+    adrNode P = G.first;
+    while (P != NULL)
+    {
+        cout << P->info << " -> ";
+        adrEdge E = P->firstEdge;
+        while (E != NULL)
+        {
+            cout << E->node->info << " ";
+            E = E->next;
         }
-
-        // Node dengan dua anak: dapatkan inorder successor (nilai terkecil di subtree kanan)
-        Node *temp = nilaiTerkecil(root->kanan);
-        root->data = temp->data; 
-        root->kanan = hapus(root->kanan, temp->data); 
+        cout << endl;
+        P = P->next;
     }
-    return root;
 }
 
-//update (mengubah data dalam tree)
-Node *update(Node *root, int lama, int baru) 
+void ResetVisited(Graph &G)
 {
-
-    if (search(root, lama) != NULL) 
+    adrNode P = G.first;
+    while (P != NULL)
     {
-        root = hapus(root, lama);
-        root = insert(root, baru);
-        cout << "data" << lama << "berhasil diupdate menjadi" << baru << endl;
-    } else {
-    cout << "data" << lama << "tidak ditemukan!" << endl;
+        P->visited = 0;
+        P = P->next;
     }
-    return root;
 }
 
-// traversal preorder
-void preOrder(Node *root) 
+void PrintDFS(Graph &G, adrNode N)
 {
-    if (root != NULL) 
+    if (N == NULL)
+        return;
+
+    N->visited = 1;
+    cout << N->info << " ";
+
+    adrEdge E = N->firstEdge;
+    while (E != NULL)
     {
-        cout << root->data << " ";
-        preOrder(root->kiri);
-        preOrder(root->kanan);
+        if (E->node->visited == 0)
+        {
+            PrintDFS(G, E->node);
+        }
+        E = E->next;
     }
 }
 
-// traversal inorder
-void inOrder(Node *root) 
+void PrintBFS(Graph &G, adrNode N)
 {
-    if (root != NULL) 
+    if (N == NULL)
+        return;
+
+    queue<adrNode> Q;
+    Q.push(N);
+
+    while (!Q.empty())
     {
-        inOrder(root->kiri);
-        cout << root->data << " ";
-        inOrder(root->kanan);
+        adrNode curr = Q.front();
+        Q.pop();
+
+        if (curr->visited == 0)
+        {
+            curr->visited = 1;
+            cout << curr->info << " ";
+
+            adrEdge E = curr->firstEdge;
+            while (E != NULL)
+            {
+                if (E->node->visited == 0)
+                {
+                    Q.push(E->node);
+                }
+                E = E->next;
+            }
+        }
     }
 }
+```
 
-// traversal postorder
-void postOrder(Node *root) 
-{ //kiri kanan akar
-    if (root != NULL) 
-    {
-        postOrder(root->kiri);
-        postOrder(root->kanan);
-        cout << root->data << " ";
-    }
-}
+main.cpp
+```h
+#include "graf.h"
+#include "graf.cpp"
+#include <iostream>
+using namespace std;
 
-int main ()
+int main()
 {
-    Node *root = NULL;
-    
-    cout << "=== 1. INSERT DATA ===" << endl;
-    root = insert (root, 10);
-    root = insert (root, 5);
-    root = insert (root, 20);
-    root = insert (root, 3);
-    root = insert (root, 7);
-    root = insert (root, 15);
-    root = insert (root, 25);
-    cout << "Data berhasil dimasukkan. \n" 
-        << endl;
-    
-    cout << "=== 2. TAMPILKAN TREE (TRAVERSAL) ===" << endl;
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
+    Graph G;
+    CreateGraph(G);
 
-    cout << "=== 3. TEST SEARCH ===" << endl;
-    int cari1 = 7, cari2 = 90;
-    cout << "Cari" << cari1 << ": " << (search(root, cari1) ? "Ketemu" : "Tidak Ketemu") << endl;
-    cout << "Cari" << cari2 << ": " << (search(root, cari2) ? "Ketemu" : "Tidak Ketemu") << endl;
-    cout << endl;
+    // Tambah node
+    InsertNode(G, 'A');
+    InsertNode(G, 'B');
+    InsertNode(G, 'C');
+    InsertNode(G, 'D');
+    InsertNode(G, 'E');
 
-    cout << "=== 4. TEST UPDATE ===" << endl;
-    //mengubah 5 menjadi 8
-    root = update (root, 5, 8);
-    cout << "Hasil InOrder setelah update: ";
-    cout << endl;
-    cout << endl;
+    // Hubungkan node (graph tidak berarah)
+    ConnectNode(G, 'A', 'B');
+    ConnectNode(G, 'A', 'C');
+    ConnectNode(G, 'B', 'D');
+    ConnectNode(G, 'C', 'E');
 
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
+    cout << "=== Struktur Graph ===\n";
+    PrintInfoGraph(G);
 
-    cout << "=== 5. TEST DELETE ===" << endl;
-    //menghapus 20 (Node  yang memiliki dua anak)
-    cout << "Menghapus angka 20..." << endl;
-    root = hapus (root, 20);
+    cout << "\n=== DFS dari Node A ===\n";
+    ResetVisited(G);
+    PrintDFS(G, FindNode(G, 'A'));
 
-    cout << "Preorder: ";
-    preOrder(root);
-    cout << endl;
-    cout << "Inorder: ";
-    inOrder(root);
-    cout << endl;
-    cout << "Postorder: ";
-    postOrder(root);
-    cout << "\n" 
-        << endl;
+    cout << "\n\n=== BFS dari Node A ===\n";
+    ResetVisited(G);
+    PrintBFS(G, FindNode(G, 'A'));
 
+    cout << endl;
     return 0;
 }
 ```
